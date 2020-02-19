@@ -16,7 +16,7 @@ const Login = (props) => {
     const state = 'aaa'
     const ssoUrl = `https://accounts.spotify.com/authorize?`
         + `response_type=code&client_id=3a16f4201e6f4549b7b16283c35fe93c&scope=${scope}&`
-        + `redirect_uri=https://swaap-music-front.heroku.com/public/callback&state=${state}`;
+        + `redirect_uri=https://swaap-music-front.herokuapp.com/public/callback&state=${state}`;
 
 	if (user !== null) {
 		return <Redirect to={from} />

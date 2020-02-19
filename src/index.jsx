@@ -13,7 +13,6 @@ import Login from "./components/Login";
 import PrivateRoute from "./components/PrivateRoute";
 import SignUp from "./components/SignUp";
 import NotFoundPage from "./components/NotFoundPage";
-import Header from "./components/Header";
 
 const sagaMiddleware = createSagaMiddleware();
 const middleware = [sagaMiddleware];

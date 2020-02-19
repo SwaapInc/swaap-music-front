@@ -1,8 +1,9 @@
+//import properties from 'properties/application-local'
+
 const proxy = require('http-proxy-middleware');
-const properties = require('properties/application-local')
 
 module.exports = function (app) {
-    const target = properties.proxypath;
+    const target = 'https://swaap-music-back.herokuapp.com'; //set to http://localhost:1234 in local
 
     app.use(proxy(
         '/api', {

@@ -8,10 +8,15 @@ import {resetSearch, toggleSearch} from "../modules/search";
 import {resetPlaylist} from "../modules/playlistManager";
 
 const Body = () => {
-    const {user, playlistsDeezer, playlistsSpotify, playlistsSaved, showUserDetails} = useSelector(state => state.auth);
+    const {user, playlistsDeezer, playlistsSpotify, playlistsSaved, showUserDetails, accessToken} = useSelector(state => state.auth);
     const {token} = useSelector(state => state.localize);
     const {searchBar} = useSelector(state => state.search)
     const dispatch = useDispatch()
+    const scope = 'user-read-private user-read-email'
+    const state = 'aaa'
+    const ssoUrl = `https://accounts.spotify.com/authorize?`
+        + `response_type=code&client_id=3a16f4201e6f4549b7b16283c35fe93c&scope=${scope}&`
+        + `redirect_uri=https://swaap-music-front.heroku.com/public/callback&state=${state}`;
 
     return (
         <div className="kt-container kt-grid__item kt-grid__item--fluid kt-grid--hor" id="kt-content">
@@ -109,7 +114,19 @@ const Body = () => {
                                                                     )
                                                                 }
                                                             ) : (
-                                                            <p>{token.missing_playlist.spotify}</p>
+                                                            <div className="nav nav-pills nav-tabs-btn nav-pills-btn-brand">
+                                                                <p>{token.missing_playlist.spotify}</p>
+                                                                {
+                                                                    accessToken ? (
+                                                                        <div/>
+                                                                    ) : (
+                                                                        <a href={ssoUrl} className="btn btn-brand btn-pill">
+                                                                            <i className="fab fa-spotify"/>
+                                                                            Spotify
+                                                                        </a>
+                                                                    )
+                                                                }
+                                                            </div>
                                                         )}
                                                 </div>
                                             </div>

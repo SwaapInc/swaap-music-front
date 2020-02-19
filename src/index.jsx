@@ -13,6 +13,7 @@ import Login from "./components/Login";
 import PrivateRoute from "./components/PrivateRoute";
 import SignUp from "./components/SignUp";
 import NotFoundPage from "./components/NotFoundPage";
+import Callback from "./components/Callback";
 
 const sagaMiddleware = createSagaMiddleware();
 const middleware = [sagaMiddleware];
@@ -37,6 +38,7 @@ ReactDOM.render(
                 )}/>
                 <Route path='/public/login' component={Login}/>
                 <Route path='/public/signUp' component={SignUp}/>
+                <Route path='/public/callback' component={Callback}/>
                 <PrivateRoute path='/private/' component={App}/>
                 <Route path="*" component={NotFoundPage} />
             </Switch>

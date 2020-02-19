@@ -12,6 +12,11 @@ const Login = (props) => {
 	const { from } = props.location.state || { from: { pathname: '/private/' } }
 	const {user} = useSelector(state => state.auth);
     const {token} = useSelector(state => state.localize);
+    const scope = 'user-read-private user-read-email'
+    const state = 'aaa'
+    const ssoUrl = `https://accounts.spotify.com/authorize?`
+        + `response_type=code&client_id=3a16f4201e6f4549b7b16283c35fe93c&scope=${scope}&`
+        + `redirect_uri=https://swaap-music-front.heroku.com/public/callback&state=${state}`;
 
 	if (user !== null) {
 		return <Redirect to={from} />
@@ -28,7 +33,7 @@ const Login = (props) => {
                 >
                     <div className="kt-portlet justify-content-lg-center"
                          style={{
-                             height: "350px"
+                             minHeight: "350px"
                          }}
                     >
                         <div className="kt-portlet__head justify-content-lg-center">
@@ -69,14 +74,19 @@ const Login = (props) => {
                                          onClick={() => props.history.push('/public/signup/')}>
                                         {token.login_page.sign_up}
                                     </div>
-                                    &nbsp;
-                                    &nbsp;
                                     <div className="btn btn-brand btn-elevate btn-pill"
                                          id="kt_login_submit"
                                          onClick={() => dispatch(requestLoginUser())}>
                                         {token.login_page.sign_in}
                                     </div>
                                 </div>
+                            </div>
+                            <div className="kt-separator kt-separator--space-lg  kt-separator--border-solid"/>
+                            <div>
+                                <a href={ssoUrl} className="btn btn-brand btn-pill">
+                                    <i className="fab fa-spotify"/>
+                                    Spotify
+                                </a>
                             </div>
                         </div>
                     </div>

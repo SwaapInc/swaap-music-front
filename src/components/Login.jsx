@@ -2,7 +2,7 @@ import React from 'react'
 import {
 	Redirect
 } from 'react-router-dom'
-import {requestLoginUser} from "../modules/auth";
+import {requestInputLogin, requestInputPwd, requestLoginUser} from "../modules/auth";
 import {useDispatch, useSelector} from "react-redux";
 import Header from "./Header";
 import Footer from "./Footer";
@@ -10,7 +10,7 @@ import Footer from "./Footer";
 const Login = (props) => {
 	const dispatch = useDispatch()
 	const { from } = props.location.state || { from: { pathname: '/private/' } }
-	const {user} = useSelector(state => state.auth);
+	const {user, login, pwd} = useSelector(state => state.auth);
     const {token} = useSelector(state => state.localize);
     const scope = 'user-read-private user-read-email'
     const state = 'aaa'
@@ -52,11 +52,13 @@ const Login = (props) => {
                         }}>
                             <div className="form-group">
                                 <input className="form-control" type="text" placeholder={token.login_page.username}
-                                       name="username"/>
+                                       name="username" value={login}
+                                       onChange={event => dispatch(requestInputLogin(event.target.value))}/>
                             </div>
                             <div className="form-group">
                                 <input className="form-control" type="password" placeholder={token.login_page.password}
-                                       name="password"/>
+                                       name="password" value={pwd}
+                                       onChange={event => dispatch(requestInputPwd(event.target.value))}/>
                             </div>
                             &nbsp;
                             <div style={{
@@ -76,7 +78,10 @@ const Login = (props) => {
                                     </div>
                                     <div className="btn btn-brand btn-elevate btn-pill"
                                          id="kt_login_submit"
-                                         onClick={() => dispatch(requestLoginUser())}>
+                                         onClick={() => dispatch(requestLoginUser({
+                                             username: login,
+                                             password: pwd
+                                         }))}>
                                         {token.login_page.sign_in}
                                     </div>
                                 </div>

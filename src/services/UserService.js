@@ -10,6 +10,26 @@ class UserService {
             })
         return formatSimpleUser(data)
     }
+
+    async authenticateUser(input) {
+        const res = await axios.post(`/api/authenticate`, input)
+        const {data} = res;
+        if(data.status === 200) {
+            return {
+                status: data.status,
+                user: formatSimpleUser(data.userInfos.user),
+                playlists: data.userInfos.playlists
+            }
+        } else {
+            return data
+        }
+    }
+
+    async signUpUser(input) {
+        const res = await axios.post(`/api/users`, input)
+        const {data} = res;
+        console.log(data)
+    }
 }
 
 export default UserService

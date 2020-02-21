@@ -1,14 +1,22 @@
 import React from 'react'
-import {requestLoginUser} from "../modules/auth";
 import {useDispatch, useSelector} from "react-redux";
 import Header from "./Header";
 import Footer from "./Footer";
+
+import {
+    requestInputEmail,
+    requestInputFirstname,
+    requestInputLastname,
+    requestInputPassword,
+    requestInputUsername,
+    requestSignUpUser
+} from "../modules/signup";
 
 const SignUp = (props) => {
     const dispatch = useDispatch()
     const {token} = useSelector(state => state.localize);
     const {avatar} = useSelector(state => state.auth);
-
+    const {username, password, first_name, name, email} = useSelector(state => state.signup);
     return (
         <div className="kt-grid__item kt-grid__item--fluid kt-grid kt-grid--hor kt-wrapper kt-page" id="kt-wrapper">
             <Header/>
@@ -62,7 +70,8 @@ const SignUp = (props) => {
                                                             UserName</label>
                                                         <div className="col-lg-9 col-xl-6">
                                                             <input className="form-control" type="text"
-                                                                   value=""/>
+                                                                   value={username}
+                                                                   onChange={event => dispatch(requestInputUsername(event.target.value))}/>
                                                         </div>
                                                     </div>
                                                     <div className="form-group row">
@@ -70,7 +79,9 @@ const SignUp = (props) => {
                                                             Password
                                                         </label>
                                                         <div className="col-lg-9 col-xl-6">
-                                                            <input className="form-control" type="text"/>
+                                                            <input className="form-control" type="text"
+                                                                   value={password}
+                                                                   onChange={event => dispatch(requestInputPassword(event.target.value))}/>
                                                         </div>
                                                     </div>
                                                     <div className="row">
@@ -85,14 +96,16 @@ const SignUp = (props) => {
                                                         <label className="col-xl-3 col-lg-3 col-form-label">First
                                                             Name</label>
                                                         <div className="col-lg-9 col-xl-6">
-                                                            <input className="form-control" type="text"/>
+                                                            <input className="form-control" type="text" value={first_name}
+                                                                   onChange={event => dispatch(requestInputFirstname(event.target.value))}/>
                                                         </div>
                                                     </div>
                                                     <div className="form-group row">
                                                         <label className="col-xl-3 col-lg-3 col-form-label">Last
                                                             Name</label>
                                                         <div className="col-lg-9 col-xl-6">
-                                                            <input className="form-control" type="text"/>
+                                                            <input className="form-control" type="text" value={name}
+                                                                   onChange={event => dispatch(requestInputLastname(event.target.value))}/>
                                                         </div>
                                                     </div>
                                                     <div className="form-group row">
@@ -106,7 +119,8 @@ const SignUp = (props) => {
                                                                     </span>
                                                                 </div>
                                                                 <input type="text" className="form-control"
-                                                                       placeholder="Email"
+                                                                       placeholder="Email" value={email}
+                                                                       onChange={event => dispatch(requestInputEmail(event.target.value))}
                                                                        aria-describedby="basic-addon1"/>
                                                             </div>
                                                         </div>
@@ -120,7 +134,14 @@ const SignUp = (props) => {
                         </div>
                     </div>
                     <div className="kt-portlet__foot">
-                        <div className="btn btn-brand">
+                        <div className="btn btn-brand"
+                            onClick={() => dispatch(requestSignUpUser({
+                                username,
+                                password,
+                                first_name,
+                                name,
+                                email
+                            }))}>
                             {token.login_page.sign_up}
                         </div>
                     </div>

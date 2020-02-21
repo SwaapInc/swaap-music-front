@@ -33,7 +33,7 @@ const UserDetails = () => {
                 {user != null ? (
                     <div className="kt-user-card-v3 kt-margin-b-30">
                         <div className="kt-user-card-v3__avatar">
-                            <img src={user.avatar} alt={user.pseudo}/>
+                            <img src="/dist/assets/media/users/jeremy_morvan.jpg" alt={user.pseudo}/>
                         </div>
                         <div className="kt-user-card-v3__detalis">
                             <div className="kt-user-card-v3__name">

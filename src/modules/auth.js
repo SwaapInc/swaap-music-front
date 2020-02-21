@@ -5,6 +5,18 @@ export const LOGOUT = 'app/auth/LOGOUT'
 export const TOGGLE_LOADING = 'app/auth/LOADING'
 export const USER_DETAILS = 'app/auth/USER_DETAILS'
 export const SSO_CONNEXION_REQUEST = 'app/auth/SSO_CONNEXION'
+export const INPUT_LOGIN = 'app/auth/INPUT_LOGIN'
+export const INPUT_PWD = 'app/auth/INPUT_PWD'
+
+export const requestInputLogin = (input) => ({
+    type: INPUT_LOGIN,
+    input
+})
+
+export const requestInputPwd = (input) => ({
+    type: INPUT_PWD,
+    input
+})
 
 export const loginUser = (userInfo) => ({
     type: LOGIN,
@@ -28,8 +40,9 @@ export const toggleLoading = () => ({
     type: TOGGLE_LOADING,
 })
 
-export const requestLoginUser = () => ({
+export const requestLoginUser = (input) => ({
     type: LOGIN_REQUEST,
+    input
 })
 
 export const detailUser = () => ({
@@ -53,7 +66,8 @@ export default function reducer(
         avatar: "'/dist/assets/media/users/default.jpg'",
         accessToken: '',
         refreshToken: '',
-
+        login: '',
+        pwd: '',
     },
     action,
 ) {
@@ -94,6 +108,16 @@ export default function reducer(
             return {
                 ...state,
                 showUserDetails: !state.showUserDetails,
+            }
+        case INPUT_LOGIN:
+            return {
+                ...state,
+                login: action.input,
+            }
+        case INPUT_PWD:
+            return {
+                ...state,
+                pwd: action.input,
             }
         default:
             return state

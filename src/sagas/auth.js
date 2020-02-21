@@ -6,6 +6,7 @@ import Playlist from "../modeles/Playlist";
 import PlaylistSaved from "../modeles/PlaylistSaved";
 import SpotifyService from "../services/SpotifyService";
 
+/*
 const fakePlayslists = {
     playlistsDeezer: [
         new Playlist(
@@ -303,18 +304,25 @@ const fakePlayslists = {
             }
         ),
     ]
-}
+}*/
 
-function* requestLoginUser() {
+function* requestLoginUser(input) {
     yield put(toggleLoading());
-    const user = yield new UserService().getSimpleUserForTest()
+    const {username, password} = input.input
+    const data = yield new UserService().authenticateUser({
+        username,
+        password
+    })
     yield sleep(200);
-    yield put(loginUser(
-    {
-            user,
-        ...fakePlayslists
-        }
-    ));
+    if(data.status === 200) {
+        const {user, playlists} = data
+        yield put(loginUser(
+            {
+                user,
+                ...playlists
+            }
+        ));
+    }
     yield put(toggleLoading());
 }
 
@@ -323,17 +331,10 @@ function* requestSSOConnection (input) {
     const data = yield new SpotifyService().requestAccessToken({code, state})
     if(data.err !== null) {
         const {access_token, refresh_token} = data
-        //const user = yield new UserService().getSimpleUserForTest()
         yield put(loginUserSSO({
             access_token,
             refresh_token,
         }))
-        /*yield put(loginUser(
-            {
-                user,
-                ...fakePlayslists
-            }
-        ));*/
     } else {
         //todo gerer erreur
     }

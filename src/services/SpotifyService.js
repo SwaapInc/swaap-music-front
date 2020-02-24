@@ -11,6 +11,24 @@ export function formatData(data) {
 
 class SpotifyService {
 
+    async requestAccessToken(input) {
+        const {code, state} = input
+        const {data} = await axios.post(`/api/spotify/authentication/callback`, {
+            code,
+            state
+        }).catch(function (error) {
+            console.error(error)
+            return {
+                'error_message' : 'invalid_token',
+                'err' : error,
+            }
+        })
+        return data
+    }
+
+
+
+
     async searchTrackFromCompleteRequestInBean(requestInBean) {
         const {title, album, artist} = requestInBean
 

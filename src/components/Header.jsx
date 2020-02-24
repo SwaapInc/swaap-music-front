@@ -1,6 +1,6 @@
 import React from 'react';
 import {useSelector, useDispatch} from 'react-redux';
-import {requestLoginUser, detailUser} from '../modules/auth';
+import {detailUser} from '../modules/auth';
 import {toggleSearch} from '../modules/search';
 import {changeLocale} from "../modules/localize";
 
@@ -89,7 +89,7 @@ const Header = () => {
                             </div>
                             <div className="kt-header__topbar-wrapper"
                                 onClick={() => dispatch(detailUser())}>
-                                <img alt="Pic" src={avatar}/>
+                                <img alt="Pic" src='/dist/assets/media/users/jeremy_morvan.jpg' alt={user.pseudo}/>
                             </div>
                         </div>
                     ) : (

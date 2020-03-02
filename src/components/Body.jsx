@@ -14,10 +14,9 @@ const Body = () => {
     const {searchBar} = useSelector(state => state.search)
     const dispatch = useDispatch()
     const scope = 'user-read-private user-read-email'
-    const state = 'aaa'
     const ssoUrl = `https://accounts.spotify.com/authorize?`
         + `response_type=code&client_id=3a16f4201e6f4549b7b16283c35fe93c&scope=${scope}&`
-        + `redirect_uri=https://swaap-music-front.herokuapp.com/public/callback&state=${state}`;
+        + `redirect_uri=https://swaap-music-front.herokuapp.com/public/callback`;
 
     const [cookies] = useCookies([
         'swaap_user_cookie',
@@ -141,7 +140,7 @@ const Body = () => {
                                                                 }
                                                             </div>
                                                         ) : (
-                                                            <a href={ssoUrl} className="btn btn-spotify btn-pill" >
+                                                            <a href={`${ssoUrl}&state=1`} className="btn btn-spotify btn-pill" >
                                                                 <i className="fab fa-spotify"/>
                                                                 {token.connect_to_spotify}
                                                             </a>
@@ -187,7 +186,7 @@ const Body = () => {
 
                                                             </div>
                                                         ) : (
-                                                            <a href={ssoUrl} className="btn btn-deezer btn-pill">
+                                                            <a href={`${ssoUrl}&state=1`} className="btn btn-deezer btn-pill">
                                                                 <i className="socicon-deezer"/>
                                                                 {token.connect_to_deezer}
                                                             </a>

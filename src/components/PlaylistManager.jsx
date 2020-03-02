@@ -10,7 +10,7 @@ const PlaylistManager = () => {
     const {playlists, progressBar, playlistName, playlistImage, playlistId, trackCorrelation} = useSelector(
         state => state.playlists)
     // store du reducer "user
-    const {user, playlistsSaved} = useSelector(state => state.auth);
+    const {playlistsSaved} = useSelector(state => state.auth);
     const {token} = useSelector(state => state.localize)
     const dispatch = useDispatch()
 

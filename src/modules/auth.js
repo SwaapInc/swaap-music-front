@@ -1,5 +1,3 @@
-import {UPDATE_PLAYLIST_NAME} from "./playlistManager";
-
 export const LOGIN = 'app/auth/LOGIN'
 export const LOGIN_SSO = 'app/auth/LOGIN'
 export const LOGIN_REQUEST = 'app/auth/LOGIN_REQUEST'
@@ -56,7 +54,6 @@ export const updateUserPlaylists = (input) => ({
 export const detailUser = () => ({
     type: USER_DETAILS,
 })
-
 
 export const requestSSOAuthentication = (input) => ({
     type: SSO_CONNEXION_REQUEST,

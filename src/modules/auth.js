@@ -7,6 +7,18 @@ export const USER_DETAILS = 'app/auth/USER_DETAILS'
 export const SSO_CONNEXION_REQUEST = 'app/auth/SSO_CONNEXION'
 export const INPUT_LOGIN = 'app/auth/INPUT_LOGIN'
 export const INPUT_PWD = 'app/auth/INPUT_PWD'
+export const SET_USER_STATE = 'app/auth/SET_USER_STATE'
+export const SET_TOKEN_STATE = 'app/auth/SET_TOKEN_STATE'
+
+export const setToken = (token) => ({
+    type: SET_TOKEN_STATE,
+    token,
+})
+
+export const setUser = (user) => ({
+    type: SET_USER_STATE,
+    user,
+})
 
 export const requestInputLogin = (input) => ({
     type: INPUT_LOGIN,
@@ -64,8 +76,16 @@ export default function reducer(
         playlistsSpotify: [],
         playlistsSaved: [],
         avatar: "'/dist/assets/media/users/default.jpg'",
-        accessToken: '',
-        refreshToken: '',
+        tokens: {
+            spotify: {
+                accessToken: null,
+                refreshToken: null,
+            },
+            deezer: {
+                accessToken: null,
+                refreshToken: null,
+            },
+        },
         login: '',
         pwd: '',
     },
@@ -77,15 +97,15 @@ export default function reducer(
                 ...state,
                 user: action.user,
                 avatar: action.user.avatar,
-                playlistsDeezer: action.playlistsDeezer,
-                playlistsSpotify: action.playlistsSpotify,
-                playlistsSaved: action.playlistsSaved,
+                playlistsDeezer: action.playlistsDeezer ? action.playlistsDeezer : [],
+                playlistsSpotify: action.playlistsSpotify ? action.playlistsSpotify : [],
+                playlistsSaved: action.playlistsSaved ? action.playlistsSaved : [],
             }
         case LOGIN_SSO:
             return {
                 ...state,
                 accessToken: action.accessToken,
-                refreshToken: action.refresh_token,
+                refreshToken: action.refreshToken,
             }
         case LOGOUT:
             return {
@@ -96,8 +116,18 @@ export default function reducer(
                 playlistsDeezer: [],
                 playlistsSpotify: [],
                 playlistsSaved: [],
-                accessToken: '',
-                refreshToken: '',
+                tokens: {
+                    spotify: {
+                        accessToken: '',
+                        refreshToken: '',
+                    },
+                    deezer: {
+                        accessToken: '',
+                        refreshToken: '',
+                    },
+                },
+                login: '',
+                pwd: '',
             }
         case TOGGLE_LOADING:
             return {
@@ -118,6 +148,23 @@ export default function reducer(
             return {
                 ...state,
                 pwd: action.input,
+            }
+        case SET_USER_STATE:
+            return {
+                ...state,
+                user: action.user !== undefined ? action.user : null
+            }
+        case SET_TOKEN_STATE:
+            const api = action.token.api
+            const token = action.token.token
+            let newTokens = {
+                ...state.tokens
+            }
+            newTokens[api][token] = action.token.value
+
+            return {
+               ...state,
+               tokens: newTokens
             }
         default:
             return state

@@ -28,7 +28,11 @@ class UserService {
     async signUpUser(input) {
         const res = await axios.post(`/api/users`, input)
         const {data} = res;
-        console.log(data)
+        return {
+            status: data.status,
+            user: formatSimpleUser(data.userInfos),
+            playlists: data.userInfos.playlists
+        };
     }
 }
 

@@ -1,15 +1,26 @@
-import {LOGIN_REQUEST} from "./auth";
-
 export const INPUT_USERNAME = 'app/signup/INPUT_USERNAME'
 export const INPUT_PASSWORD = 'app/signup/INPUT_PASSWORD'
 export const INPUT_FIRSTNAME = 'app/signup/INPUT_FIRSTNAME'
 export const INPUT_LASTNAME = 'app/signup/INPUT_LASTNAME'
 export const INPUT_EMAIL = 'app/signup/INPUT_EMAIL'
 export const SIGN_UP_REQUEST = 'app/signup/SIGN_UP_REQUEST'
+export const RESET_FORM = 'app/signup/SIGN_UP_REQUEST'
+
+const DEFAULT_STATE = {
+    username: '',
+    password: '',
+    first_name: '',
+    name: '',
+    email: ''
+}
 
 export const requestSignUpUser = (input) => ({
     type: SIGN_UP_REQUEST,
     input
+})
+
+export const resetForm = () => ({
+    type: RESET_FORM,
 })
 
 export const requestInputUsername = (input) => ({
@@ -39,13 +50,7 @@ export const requestInputEmail = (input) => ({
 })
 
     export default function reducer(
-    state = {
-        username: '',
-        password: '', 
-        first_name: '',
-        name: '',
-        email: ''
-    },
+    state = DEFAULT_STATE,
     action,
 ) {
     switch (action.type) {
@@ -74,6 +79,8 @@ export const requestInputEmail = (input) => ({
                 ...state,
                 email: action.input
             }
+        case RESET_FORM:
+            return DEFAULT_STATE
         default:
             return state;
     }

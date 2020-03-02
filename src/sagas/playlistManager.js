@@ -6,7 +6,7 @@ import {
     ADD_TO_PLAYLIST,
     IMPORT_PLAYLIST,
     addResultToPlaylist,
-    convertPlaylistProgress, GET_SAVED_PLAYLIST, SAVE_NEW_PLAYLIST
+    convertPlaylistProgress, GET_SAVED_PLAYLIST, SAVE_NEW_PLAYLIST, PLAYLISTS_INFOS
 } from "../modules/playlistManager";
 import PlaylistService from "../services/PlaylistService";
 
@@ -243,9 +243,16 @@ function* importPlaylistFromId(input) {
     }))
 }
 
+function* getPlaylistsInfos(tokens) {
+    //const {spotify, deezer} = tokens.tokens
+
+    return new SpotifyService().getPlaylistsForUsers(tokens.tokens)
+}
+
 export default function* manageAddPlaylist() {
     yield takeEvery(ADD_TO_PLAYLIST, addTrackToPlaylist)
     yield takeEvery(IMPORT_PLAYLIST, importPlaylistFromId)
     yield takeEvery(GET_SAVED_PLAYLIST, importSavedPlaylistFromId)
     yield takeEvery(SAVE_NEW_PLAYLIST, saveNewPlaylist)
+    yield takeEvery(PLAYLISTS_INFOS, getPlaylistsInfos)
 }

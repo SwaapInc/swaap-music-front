@@ -2,8 +2,6 @@ import {put, takeEvery} from 'redux-saga/effects'
 import {LOGIN_REQUEST, loginUser, loginUserSSO, SSO_CONNEXION_REQUEST, toggleLoading} from "../modules/auth";
 import UserService from "../services/UserService";
 import {sleep} from "../util/utils";
-import Playlist from "../modeles/Playlist";
-import PlaylistSaved from "../modeles/PlaylistSaved";
 import SpotifyService from "../services/SpotifyService";
 
 /*
@@ -329,14 +327,14 @@ function* requestLoginUser(input) {
 function* requestSSOConnection (input) {
     const {code, state, api} = input.input
     const data = yield new SpotifyService().requestAccessToken({code, state})
-    if(data.err !== null) {
+    if(data.status === 400) {
+        //todo gerer erreur
+    } else {
         const {access_token, refresh_token} = data
         yield put(loginUserSSO({
             access_token,
             refresh_token,
         }))
-    } else {
-        //todo gerer erreur
     }
 }
 

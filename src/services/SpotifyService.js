@@ -21,8 +21,6 @@ class SpotifyService {
     async requestAccessToken(input) {
         const {code} = input
         const {data} = await axios.post(`/api/spotify/authentication/callback`, {code})
-        console.log('data')
-        console.log(data)
         return data
     }
 

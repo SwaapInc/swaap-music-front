@@ -27,16 +27,9 @@ function* requestLoginUser(input) {
 
 function* requestSSOConnection (input) {
     const {code, state} = input.input
-    console.log('-----------------')
-    console.log('code')
-    console.log(code)
-    console.log('state')
-    console.log(state)
     switch(state) {
-        case 1 :
+        case '1' :
             const dataSpotify = yield new SpotifyService().requestAccessToken({code, state})
-            console.log('dataSpotify')
-            console.log(dataSpotify)
             if(dataSpotify.status === 400) {
                 console.error(dataSpotify.body)
                 yield put(setToken({
@@ -52,7 +45,7 @@ function* requestSSOConnection (input) {
                 }))
             }
             break;
-        case 2 :
+        case '2' :
             const dataDeezer = yield new DeezerService().requestAccessToken({code, state})
 
             if(dataDeezer.status === 400) {

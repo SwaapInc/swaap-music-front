@@ -1,3 +1,5 @@
+import {UPDATE_PLAYLIST_NAME} from "./playlistManager";
+
 export const LOGIN = 'app/auth/LOGIN'
 export const LOGIN_SSO = 'app/auth/LOGIN'
 export const LOGIN_REQUEST = 'app/auth/LOGIN_REQUEST'
@@ -7,6 +9,7 @@ export const USER_DETAILS = 'app/auth/USER_DETAILS'
 export const SSO_CONNEXION_REQUEST = 'app/auth/SSO_CONNEXION'
 export const INPUT_LOGIN = 'app/auth/INPUT_LOGIN'
 export const INPUT_PWD = 'app/auth/INPUT_PWD'
+export const UPDATE_USER_PLAYLISTS = "app/auth/UPDATE_USER_PLAYLISTS"
 
 export const requestInputLogin = (input) => ({
     type: INPUT_LOGIN,
@@ -45,6 +48,11 @@ export const requestLoginUser = (input) => ({
     input
 })
 
+export const updateUserPlaylists = (input) => ({
+    type: UPDATE_USER_PLAYLISTS,
+    playlistsSaved: input.playlistsSaved
+})
+
 export const detailUser = () => ({
     type: USER_DETAILS,
 })
@@ -81,6 +89,12 @@ export default function reducer(
                 playlistsSpotify: action.playlistsSpotify,
                 playlistsSaved: action.playlistsSaved,
             }
+        case UPDATE_USER_PLAYLISTS: {
+            return {
+                ...state,
+                playlistsSaved: action.playlistsSaved
+            }
+        }
         case LOGIN_SSO:
             return {
                 ...state,

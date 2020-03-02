@@ -8,7 +8,6 @@ const SavedPlaylist = (props) => {
     const {progressBar, playlistId} = useSelector(state => state.playlists)
     const dispatch = useDispatch()
     const {token} = useSelector(state => state.localize);
-
     return (
         <div className="col-xl-2 justify-content-lg-center" align="center">
             <div className="kt-widget-2__item" style={{

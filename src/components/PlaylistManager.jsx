@@ -1,17 +1,20 @@
 import React from 'react'
-import {useDispatch, useSelector} from "react-redux";
-import Tracks from "./Tracks";
-import {requestSearchTrack, toggleSearch, selectApi, resetSearch} from "../modules/search";
-import {resetPlaylist, saveNewPlaylist, updatePlaylistName} from "../modules/playlistManager";
+import {useDispatch, useSelector} from "react-redux"
+import Tracks from "./Tracks"
+import {requestSearchTrack, resetSearch, selectApi, toggleSearch} from "../modules/search"
+import {resetPlaylist, updatePlaylistName} from "../modules/playlistManager"
+import {updateUserPlaylists} from "../modules/auth"
 
 const PlaylistManager = () => {
     const {tracks, searchBar, searchValue, api} = useSelector(state => state.search)
-    const {playlists, progressBar, playlistName, playlistImage, playlistId, trackCorrelation} = useSelector(state => state.playlists)
-    const {user} = useSelector(state => state.auth);
+    const {playlists, progressBar, playlistName, playlistImage, playlistId, trackCorrelation} = useSelector(
+        state => state.playlists)
+    // store du reducer "user
+    const {user, playlistsSaved} = useSelector(state => state.auth);
     const {token} = useSelector(state => state.localize)
     const dispatch = useDispatch()
 
-    function getTrackToDisplay(tracks){
+    function getTrackToDisplay(tracks) {
         switch (api) {
             case 1:
                 return tracks.dataSpotify
@@ -22,7 +25,7 @@ const PlaylistManager = () => {
         }
     }
 
-    function getPlaylistToDisplay(playlist){
+    function getPlaylistToDisplay(playlist) {
         switch (api) {
             case 1:
                 return playlist.map((item) => item.dataSpotify)
@@ -31,6 +34,21 @@ const PlaylistManager = () => {
             default :
                 return []
         }
+    }
+
+    function dispatchUpdateUserPlaylists() {
+        dispatch(updateUserPlaylists({
+                                         playlistsSaved:
+
+                                             [...playlistsSaved,
+                                                 {
+                                                     tracks: playlists,
+                                                     name: playlistName,
+                                                     image: playlistImage,
+                                                     id: playlistId,
+                                                 },]
+                                     }
+        ))
     }
 
     return (
@@ -60,7 +78,8 @@ const PlaylistManager = () => {
                             </button>
                         </div>
                         <div className="kt-portlet__body">
-                            <div className="kt-quick-search kt-quick-search--offcanvas" id="kt_quick_search_offcanvas" >
+                            <div className="kt-quick-search kt-quick-search--offcanvas"
+                                 id="kt_quick_search_offcanvas">
                                 <div className="kt-quick-search__form">
                                     <div className="input-group">
                                         <div className="input-group-prepend">
@@ -68,9 +87,12 @@ const PlaylistManager = () => {
                                                 <i className="flaticon2-search-1"/>
                                             </span>
                                         </div>
-                                        <input type="text" className="form-control kt-quick-search__input"
-                                               placeholder={token.search_placeholder} name="query" value={searchValue}
-                                               onChange={event => dispatch(requestSearchTrack(event.target.value))}/>
+                                        <input type="text"
+                                               className="form-control kt-quick-search__input"
+                                               placeholder={token.search_placeholder} name="query"
+                                               value={searchValue}
+                                               onChange={event => dispatch(
+                                                   requestSearchTrack(event.target.value))}/>
                                     </div>
                                 </div>
                             </div>
@@ -100,7 +122,7 @@ const PlaylistManager = () => {
                                             </button>
                                         </div>
                                         <button type="button" className="btn btn-outline-info"
-                                            onClick={() => dispatch(resetSearch())}>
+                                                onClick={() => dispatch(resetSearch())}>
                                             {token.button_reset_search}
                                         </button>
                                     </div>
@@ -108,40 +130,46 @@ const PlaylistManager = () => {
                             </div>
                             {
                                 (progressBar > 0 && progressBar < 100) ?
-                                    (
-                                        <div className="kt-section"
-                                             style={{
-                                                 width: "100%",
-                                             }}
-                                        >
-                                            <div className="kt-section__content kt-section__content--border">
-                                                <div className="progress">
-                                                    <div className="progress-bar progress-bar-striped kt-bg-brand" role='progressbar'
-                                                         style={{
-                                                             width: progressBar + '%',
-                                                         }}
-                                                         aria-valuenow={progressBar}
-                                                         aria-valuemin="0"
-                                                         aria-valuemax="100"
-                                                    >
-                                                        {progressBar | 0}%
-                                                    </div>
+                                (
+                                    <div className="kt-section"
+                                         style={{
+                                             width: "100%",
+                                         }}
+                                    >
+                                        <div
+                                            className="kt-section__content kt-section__content--border">
+                                            <div className="progress">
+                                                <div
+                                                    className="progress-bar progress-bar-striped kt-bg-brand"
+                                                    role='progressbar'
+                                                    style={{
+                                                        width: progressBar + '%',
+                                                    }}
+                                                    aria-valuenow={progressBar}
+                                                    aria-valuemin="0"
+                                                    aria-valuemax="100"
+                                                >
+                                                    {progressBar | 0}%
                                                 </div>
                                             </div>
                                         </div>
-                                    ) : (
-                                        <div/>
-                                    )
+                                    </div>
+                                ) : (
+                                    <div/>
+                                )
                             }
                             &nbsp;
                             &nbsp;
                             <div className="row">
-                                <Tracks items={getTrackToDisplay(tracks)} api={api} isPlaylist={false} trackCorrelation={trackCorrelation}/>
-                                <Tracks items={getPlaylistToDisplay(playlists)} api={api} isPlaylist={true} trackCorrelation={trackCorrelation}/>
+                                <Tracks items={getTrackToDisplay(tracks)} api={api}
+                                        isPlaylist={false} trackCorrelation={trackCorrelation}/>
+                                <Tracks items={getPlaylistToDisplay(playlists)} api={api}
+                                        isPlaylist={true} trackCorrelation={trackCorrelation}/>
                             </div>
                             <div className="kt-section">
                                 <div className="kt-section__info">
-                                    <div className="kt-quick-search kt-quick-search--offcanvas" id="kt_quick_search_offcanvas" >
+                                    <div className="kt-quick-search kt-quick-search--offcanvas"
+                                         id="kt_quick_search_offcanvas">
                                         <div className="kt-quick-search__form row" style={{
                                             marginBottom: '-2rem'
                                         }}>
@@ -152,9 +180,11 @@ const PlaylistManager = () => {
                                             &nbsp;
                                             <div className="input-group" style={{width: "90%"}}>
                                                 <input type="text" className="form-control"
-                                                       placeholder={token.playlist_title_placeholder} name="query"
+                                                       placeholder={token.playlist_title_placeholder}
+                                                       name="query"
                                                        value={playlistName}
-                                                       onChange={(event) => dispatch(updatePlaylistName(event.target.value))}
+                                                       onChange={(event) => dispatch(
+                                                           updatePlaylistName(event.target.value))}
                                                        style={{
                                                            top: "60%"
                                                        }}
@@ -168,22 +198,18 @@ const PlaylistManager = () => {
                         <div className="kt-portlet__foot modal-footer justify-content-between">
                             <div className="kt-widget__toolbar">
                                 <button type="button" className="btn btn-outline-brand"
-                                        onClick={() => dispatch(toggleSearch())}>{token.button_close}</button>
+                                        onClick={() => dispatch(
+                                            toggleSearch())}>{token.button_close}</button>
                                 &nbsp;
                                 &nbsp;
                                 <button type="button" className="btn btn-brand"
-                                    onClick={() => dispatch(saveNewPlaylist({
-                                        playlist: {
-                                            tracks : playlists,
-                                            name : playlistName,
-                                            img : playlistImage,
-                                            id : playlistId,
-                                        },
-                                        userId : user.id,
-                                    }))}>{token.button_save_playlist}</button>
+                                        onClick={() => dispatchUpdateUserPlaylists()}>
+                                    {token.button_save_playlist}
+                                </button>
                             </div>
                             <button type="button" className="btn btn-outline-info"
-                                    onClick={() => dispatch(resetPlaylist())}>{token.button_reset_playlist}</button>
+                                    onClick={() => dispatch(
+                                        resetPlaylist())}>{token.button_reset_playlist}</button>
                         </div>
                     </div>
                 </div>

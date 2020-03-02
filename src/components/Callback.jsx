@@ -13,7 +13,7 @@ const Callback = (props) => {
     } catch {
         console.log('SSO FAILED')
     } finally {
-        props.history.push('/private')
+        //props.history.push('/private')
     }
 
 

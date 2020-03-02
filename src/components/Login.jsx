@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {useEffect} from 'react'
 import {
 	Redirect
 } from 'react-router-dom'
@@ -6,6 +6,7 @@ import {requestInputLogin, requestInputPwd, requestLoginUser} from "../modules/a
 import {useDispatch, useSelector} from "react-redux";
 import Header from "./Header";
 import Footer from "./Footer";
+import {useCookies} from "react-cookie";
 
 const Login = (props) => {
 	const dispatch = useDispatch()
@@ -36,13 +37,19 @@ const Login = (props) => {
                              minHeight: "350px"
                          }}
                     >
-                        <div className="kt-portlet__head justify-content-lg-center">
+                        <div className="kt-portlet__head justify-content-lg-center"
+                             style={{
+                                 padding: "10px 0"
+                             }}>
                             <div className="kt-portlet__head-label">
                                 <div style={{
                                     fontWeight: "500",
                                     fontSize: "19.5px"
                                 }}/>
-                                <h3>SWAAP</h3>
+                                <img alt="Logo" src="/dist/assets/media/logos/SWAAPblue.png"
+                                    style={{
+                                        width: "200px"
+                                    }}/>
                             </div>
                         </div>
                         &nbsp;
@@ -88,10 +95,10 @@ const Login = (props) => {
                             </div>
                             <div className="kt-separator kt-separator--space-lg  kt-separator--border-solid"/>
                             <div>
-                                <a href={ssoUrl} className="btn btn-brand btn-pill">
+                                <button href={ssoUrl} className="btn btn-brand btn-pill">
                                     <i className="fab fa-spotify"/>
                                     Spotify
-                                </a>
+                                </button>
                             </div>
                         </div>
                     </div>

@@ -1,11 +1,20 @@
 import React from 'react';
 import {useDispatch, useSelector} from "react-redux";
 import {detailUser, logoutUser} from "../modules/auth";
+import {useCookies, withCookies} from "react-cookie";
 
 const UserDetails = () => {
     const {user, showUserDetails} = useSelector(state => state.auth);
     const {token} = useSelector(state => state.localize);
     const dispatch = useDispatch()
+
+    const [cookies, removeCookie] = useCookies([
+        'swaap_user_cookie',
+        'swaap_spotify_access_token',
+        'swaap_spotify_refresh_token',
+        'swaap_deezer_access_token',
+        'swaap_deezer_refresh_token'
+    ]);
 
     return (
         <div id="kt_offcanvas_toolbar_profile"
@@ -46,7 +55,10 @@ const UserDetails = () => {
                 )}
                 <div className="kt-margin-t-40">
                     <button type="button" className="btn btn-brand btn-font-sm btn-upper btn-bold"
-                        onClick={() => dispatch(logoutUser())}>
+                        onClick={() => {
+                            removeCookie('swaap_user_cookie')
+                            dispatch(logoutUser())
+                        }}>
                         {token.logout}
                     </button>
                 </div>
@@ -55,4 +67,4 @@ const UserDetails = () => {
     )
 }
 
-export default UserDetails
+export default withCookies(UserDetails)

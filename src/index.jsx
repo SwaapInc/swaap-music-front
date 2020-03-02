@@ -14,6 +14,9 @@ import PrivateRoute from "./components/PrivateRoute";
 import SignUp from "./components/SignUp";
 import NotFoundPage from "./components/NotFoundPage";
 import Callback from "./components/Callback";
+import {CookiesProvider} from "react-cookie";
+import Footer from "./components/Footer";
+import Header from "./components/Header";
 
 const sagaMiddleware = createSagaMiddleware();
 const middleware = [sagaMiddleware];
@@ -31,18 +34,22 @@ sagas.forEach(saga => sagaMiddleware.run(saga))
 
 ReactDOM.render(
     <Provider store={store}>
-        <BrowserRouter>
-            <Switch>
-                <Route exact path='/' render={() => (
-                    <Redirect to={'/private/home'} />
-                )}/>
-                <Route path='/public/login' component={Login}/>
-                <Route path='/public/signUp' component={SignUp}/>
-                <Route path='/public/callback' component={Callback}/>
-                <PrivateRoute path='/private/' component={App}/>
-                <Route path="*" component={NotFoundPage} />
-            </Switch>
-        </BrowserRouter>
+        <CookiesProvider>
+            <BrowserRouter>
+                <Switch>
+                    <Route exact path='/' render={() => (
+                        <Redirect to={'/private/home'} />
+                    )}/>
+                    <Route path='/public/login' component={Login}/>
+                    <Route path='/public/signUp' component={SignUp}/>
+                    <Route path='/public/callback' component={Callback}/>
+                    <PrivateRoute path='/private/' component={App}/>
+                    <Route path="*" component={NotFoundPage} />
+                    <Header/>
+                    <Footer />
+                </Switch>
+            </BrowserRouter>
+        </CookiesProvider>
     </Provider>, document.getElementById('root'));
 
 // If you want your app to work offline and load faster, you can change

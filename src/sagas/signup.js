@@ -1,6 +1,6 @@
 import {put, takeEvery} from 'redux-saga/effects'
-import {SIGN_UP_REQUEST} from "../modules/signup";
-import {toggleLoading} from "../modules/auth";
+import {resetForm, SIGN_UP_REQUEST} from "../modules/signup";
+import {loginUser, toggleLoading} from "../modules/auth";
 import UserService from "../services/UserService";
 
 function* requestSignUpUser(input) {
@@ -14,7 +14,15 @@ function* requestSignUpUser(input) {
         email
     })
 
-    console.log(data)
+    if(data.status === 200) {
+        const {user} = data
+        yield put(loginUser ({
+            user
+        }))
+    } else {
+        console.error('Error')
+        yield put(resetForm())
+    }
 
     yield put(toggleLoading());
 }

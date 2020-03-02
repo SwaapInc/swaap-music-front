@@ -20,18 +20,9 @@ class SpotifyService {
 
     async requestAccessToken(input) {
         const {code} = input
-        const {data} = await axios.post(`/api/spotify/authentication/callback`, {
-            code,
-        }).catch(function (error) {
-            console.error(error)
-            return {
-                data: {
-                    status: 400,
-                    body: `requestAccessToken failed, here was error : ${error}`
-                }
-            }
-        })
-        
+        const {data} = await axios.post(`/api/spotify/authentication/callback`, {code})
+        console.log('data')
+        console.log(data)
         return data
     }
 

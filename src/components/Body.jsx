@@ -51,6 +51,7 @@ const Body = () => {
                                     <div className="kt-widget-2">
                                         <div className="kt-widget-2__content kt-portlet__space-x">
                                             <div className="row">
+                                                {/*********** Nos listes de lecture **************/}
                                                 {playlistsSaved.length ?
                                                     playlistsSaved
                                                         .map((playlist) => {

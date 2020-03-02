@@ -29,7 +29,7 @@ const fakePlayslists = {
     playlistsSaved: [
         new PlaylistSaved(
             {
-                name: "Hello_world",
+                name: "Hello_worlsssd",
                 id: 1,
                 tracks: [
                     {
@@ -309,11 +309,11 @@ function* requestLoginUser(input) {
     yield put(toggleLoading());
     const {username, password} = input.input
     const data = yield new UserService().authenticateUser({
-        username,
-        password
-    })
+                                                              username,
+                                                              password
+                                                          })
     yield sleep(200);
-    if(data.status === 200) {
+    if (data.status === 200) {
         const {user, playlists} = data
         yield put(loginUser(
             {

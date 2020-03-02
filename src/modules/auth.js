@@ -8,6 +8,7 @@ export const INPUT_LOGIN = 'app/auth/INPUT_LOGIN'
 export const INPUT_PWD = 'app/auth/INPUT_PWD'
 export const SET_USER_STATE = 'app/auth/SET_USER_STATE'
 export const SET_TOKEN_STATE = 'app/auth/SET_TOKEN_STATE'
+export const UPDATE_USER_PLAYLISTS = "app/auth/UPDATE_USER_PLAYLISTS"
 
 export const setToken = (token) => ({
     type: SET_TOKEN_STATE,
@@ -50,10 +51,14 @@ export const requestLoginUser = (input) => ({
     input
 })
 
+export const updateUserPlaylists = (input) => ({
+    type: UPDATE_USER_PLAYLISTS,
+    playlistsSaved: input.playlistsSaved
+})
+
 export const detailUser = () => ({
     type: USER_DETAILS,
 })
-
 
 export const requestSSOAuthentication = (input) => ({
     type: SSO_CONNEXION_REQUEST,
@@ -93,6 +98,18 @@ export default function reducer(
                 playlistsDeezer: action.playlistsDeezer ? action.playlistsDeezer : [],
                 playlistsSpotify: action.playlistsSpotify ? action.playlistsSpotify : [],
                 playlistsSaved: action.playlistsSaved ? action.playlistsSaved : [],
+            }
+        case UPDATE_USER_PLAYLISTS: {
+            return {
+                ...state,
+                playlistsSaved: action.playlistsSaved
+            }
+        }
+        case LOGIN_SSO:
+            return {
+                ...state,
+                accessToken: action.accessToken,
+                refreshToken: action.refresh_token,
             }
         case LOGOUT:
             return {

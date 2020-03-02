@@ -245,8 +245,7 @@ function* importPlaylistFromId(input) {
 
 function* getPlaylistsInfos(tokens) {
     //const {spotify, deezer} = tokens.tokens
-
-    return new SpotifyService().getPlaylistsForUsers(tokens.tokens)
+    //return new SpotifyService().getPlaylistsForUsers(tokens.tokens)
 }
 
 export default function* manageAddPlaylist() {

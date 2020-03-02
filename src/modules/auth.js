@@ -1,5 +1,4 @@
 export const LOGIN = 'app/auth/LOGIN'
-export const LOGIN_SSO = 'app/auth/LOGIN'
 export const LOGIN_REQUEST = 'app/auth/LOGIN_REQUEST'
 export const LOGOUT = 'app/auth/LOGOUT'
 export const TOGGLE_LOADING = 'app/auth/LOADING'
@@ -36,12 +35,6 @@ export const loginUser = (userInfo) => ({
     playlistsDeezer: userInfo.playlistsDeezer,
     playlistsSpotify: userInfo.playlistsSpotify,
     playlistsSaved: userInfo.playlistsSaved,
-})
-
-export const loginUserSSO = (tokens) => ({
-    type: LOGIN_SSO,
-    accessToken: tokens.access_token,
-    refreshToken: tokens.access_token,
 })
 
 export const logoutUser = () => ({
@@ -100,12 +93,6 @@ export default function reducer(
                 playlistsDeezer: action.playlistsDeezer ? action.playlistsDeezer : [],
                 playlistsSpotify: action.playlistsSpotify ? action.playlistsSpotify : [],
                 playlistsSaved: action.playlistsSaved ? action.playlistsSaved : [],
-            }
-        case LOGIN_SSO:
-            return {
-                ...state,
-                accessToken: action.accessToken,
-                refreshToken: action.refreshToken,
             }
         case LOGOUT:
             return {

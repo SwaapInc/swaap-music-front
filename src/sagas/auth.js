@@ -1,9 +1,13 @@
 import {put, takeEvery} from 'redux-saga/effects'
-import {LOGIN_REQUEST, loginUser, loginUserSSO, SSO_CONNEXION_REQUEST, toggleLoading} from "../modules/auth";
+import {
+    LOGIN_REQUEST,
+    loginUser,
+    loginUserSSO,
+    SSO_CONNEXION_REQUEST,
+    toggleLoading
+} from "../modules/auth";
 import UserService from "../services/UserService";
 import {sleep} from "../util/utils";
-import Playlist from "../modeles/Playlist";
-import PlaylistSaved from "../modeles/PlaylistSaved";
 import SpotifyService from "../services/SpotifyService";
 
 /*
@@ -30,7 +34,7 @@ const fakePlayslists = {
     playlistsSaved: [
         new PlaylistSaved(
             {
-                name: "Hello_world",
+                name: "Hello_worlsssd",
                 id: 1,
                 tracks: [
                     {
@@ -310,11 +314,11 @@ function* requestLoginUser(input) {
     yield put(toggleLoading());
     const {username, password} = input.input
     const data = yield new UserService().authenticateUser({
-        username,
-        password
-    })
+                                                              username,
+                                                              password
+                                                          })
     yield sleep(200);
-    if(data.status === 200) {
+    if (data.status === 200) {
         const {user, playlists} = data
         yield put(loginUser(
             {
@@ -326,15 +330,15 @@ function* requestLoginUser(input) {
     yield put(toggleLoading());
 }
 
-function* requestSSOConnection (input) {
-    const {code, state, api} = input.input
+function* requestSSOConnection(input) {
+    const {code, state} = input.input
     const data = yield new SpotifyService().requestAccessToken({code, state})
-    if(data.err !== null) {
+    if (data.err !== null) {
         const {access_token, refresh_token} = data
         yield put(loginUserSSO({
-            access_token,
-            refresh_token,
-        }))
+                                   access_token,
+                                   refresh_token,
+                               }))
     } else {
         //todo gerer erreur
     }

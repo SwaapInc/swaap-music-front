@@ -1,5 +1,3 @@
-import {LOGIN_REQUEST} from "./auth";
-
 export const INPUT_USERNAME = 'app/signup/INPUT_USERNAME'
 export const INPUT_PASSWORD = 'app/signup/INPUT_PASSWORD'
 export const INPUT_FIRSTNAME = 'app/signup/INPUT_FIRSTNAME'
@@ -38,10 +36,10 @@ export const requestInputEmail = (input) => ({
 
 })
 
-    export default function reducer(
+export default function reducer(
     state = {
         username: '',
-        password: '', 
+        password: '',
         first_name: '',
         name: '',
         email: ''

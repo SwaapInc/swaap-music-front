@@ -5,7 +5,7 @@ import SpotifyService from "../services/SpotifyService";
 import {
     ADD_TO_PLAYLIST,
     addResultToPlaylist,
-    convertPlaylistProgress, GET_SAVED_PLAYLIST, SAVE_NEW_PLAYLIST, PLAYLISTS_INFOS
+    convertPlaylistProgress, GET_SAVED_PLAYLIST, SAVE_NEW_PLAYLIST, PLAYLISTS_INFOS, IMPORT_PLAYLIST, saveNewPlaylist
 } from "../modules/playlistManager";
 
 async function getPlaylistTracksFromApi(input, spotifyService, deezerService) {

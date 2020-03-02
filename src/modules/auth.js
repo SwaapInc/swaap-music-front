@@ -105,12 +105,6 @@ export default function reducer(
                 playlistsSaved: action.playlistsSaved
             }
         }
-        case LOGIN_SSO:
-            return {
-                ...state,
-                accessToken: action.accessToken,
-                refreshToken: action.refresh_token,
-            }
         case LOGOUT:
             return {
                 ...state,

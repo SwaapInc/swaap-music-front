@@ -8,7 +8,7 @@ const UserDetails = () => {
     const {token} = useSelector(state => state.localize);
     const dispatch = useDispatch()
 
-    const [cookies, removeCookie] = useCookies([
+    const [cookies, setCookie] = useCookies([
         'swaap_user_cookie',
         'swaap_spotify_access_token',
         'swaap_spotify_refresh_token',
@@ -56,7 +56,7 @@ const UserDetails = () => {
                 <div className="kt-margin-t-40">
                     <button type="button" className="btn btn-brand btn-font-sm btn-upper btn-bold"
                         onClick={() => {
-                            removeCookie('swaap_user_cookie')
+                            setCookie('swaap_user_cookie',undefined, {path: '/private'})
                             dispatch(logoutUser())
                         }}>
                         {token.logout}

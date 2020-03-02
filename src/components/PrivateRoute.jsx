@@ -4,7 +4,7 @@ import {useDispatch, useSelector} from "react-redux";
 import {useCookies, withCookies} from "react-cookie";
 import {setUser, setToken} from "../modules/auth";
 
-function checkUser(user) {
+function checkObject(user) {
     return user !== null && user !== undefined && user !== 'null' && user !== 'undefined'
 }
 
@@ -21,19 +21,23 @@ const PrivateRoute = ({ component: Component, ...rest }) => {
     ]);
 
     useEffect(() => {
-        if (checkUser(user)) {
-            setCookie('swaap_user_cookie', user)
+        if (checkObject(user)) {
+            //if state.user defined, update swaap_user_cookie
+            setCookie('swaap_user_cookie', user, { path: '/private' })
         }
-        if (checkUser(cookies.swaap_user_cookie)) {
+        if (checkObject(cookies.swaap_user_cookie)) {
+            //if swaap_user_cookie defined, update state.user
             dispatch(setUser(cookies.swaap_user_cookie))
         }
 
-        if(tokens.spotify.accessToken) {
-            setCookie('swaap_spotify_access_token', tokens.spotify.accessToken)
-            setCookie('swaap_spotify_refresh_token', tokens.spotify.refreshToken)
+        if(checkObject(tokens.spotify.accessToken)) {
+            //if state.tokens.spotify.accessToken defined, set cookies
+            setCookie('swaap_spotify_access_token', tokens.spotify.accessToken, { path: '/private' })
+            setCookie('swaap_spotify_refresh_token', tokens.spotify.refreshToken, { path: '/private' })
         }
 
-        if (!tokens.spotify.accessToken) {
+        if (checkObject(cookies.swaap_spotify_access_token)) {
+            //if swaap_spotify_access_token defined, set state.tokens.spotify.tokens
             dispatch(setToken({
                 api: 'spotify',
                 token: 'accessToken',
@@ -46,12 +50,14 @@ const PrivateRoute = ({ component: Component, ...rest }) => {
             }))
         }
 
-        if(tokens.deezer.accessToken) {
-            setCookie('swaap_deezer_access_token', tokens.deezer.accessToken)
-            setCookie('swaap_deezer_refresh_token', tokens.deezer.refreshToken)
+        if(checkObject(tokens.deezer.accessToken)) {
+            //if state.tokens.deezer.accessToken defined, set cookies
+            setCookie('swaap_deezer_access_token', tokens.deezer.accessToken, { path: '/private' })
+            setCookie('swaap_deezer_refresh_token', tokens.deezer.refreshToken, { path: '/private' })
         }
 
-        if (!tokens.deezer.accessToken) {
+        if (checkObject(cookies.swaap_deezer_access_token)) {
+            //if swaap_spotify_access_token defined, set state.tokens.spotify.tokens
             dispatch(setToken({
                 api: 'deezer',
                 token: 'accessToken',
@@ -68,7 +74,7 @@ const PrivateRoute = ({ component: Component, ...rest }) => {
 
     return (
         <Route {...rest} render={(props) => (
-                checkUser(user) ? (
+                checkObject(user) ? (
                     <Component/>
                 ) : (
                     <Redirect to={{ pathname: '/public/login', state: { from: props.location }}} />

@@ -93,13 +93,6 @@ const Login = (props) => {
                                     </div>
                                 </div>
                             </div>
-                            <div className="kt-separator kt-separator--space-lg  kt-separator--border-solid"/>
-                            <div>
-                                <button href={ssoUrl} className="btn btn-brand btn-pill">
-                                    <i className="fab fa-spotify"/>
-                                    Spotify
-                                </button>
-                            </div>
                         </div>
                     </div>
                 </div>

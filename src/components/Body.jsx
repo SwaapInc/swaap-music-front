@@ -19,7 +19,7 @@ const Body = () => {
         + `response_type=code&client_id=3a16f4201e6f4549b7b16283c35fe93c&scope=${scope}&`
         + `redirect_uri=https://swaap-music-front.herokuapp.com/public/callback&state=${state}`;
 
-    const [cookies, setCookie] = useCookies([
+    const [cookies] = useCookies([
         'swaap_user_cookie',
         'swaap_spotify_access_token',
         'swaap_spotify_refresh_token',

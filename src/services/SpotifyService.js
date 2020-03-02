@@ -25,11 +25,13 @@ class SpotifyService {
         }).catch(function (error) {
             console.error(error)
             return {
-                status: 400,
-                body: `requestAccessToken failed, here was error : ${error}`
+                data: {
+                    status: 400,
+                    body: `requestAccessToken failed, here was error : ${error}`
+                }
             }
         })
-
+        
         return data
     }
 

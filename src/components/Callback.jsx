@@ -18,9 +18,7 @@ const Callback = (props) => {
 
 
     return (
-        <div>
-
-        </div>
+        <div/>
     )
 }
 

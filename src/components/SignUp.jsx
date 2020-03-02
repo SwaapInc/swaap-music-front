@@ -2,6 +2,10 @@ import React from 'react'
 import {useDispatch, useSelector} from "react-redux";
 import Header from "./Header";
 import Footer from "./Footer";
+import {
+    Redirect
+} from 'react-router-dom'
+
 
 import {
     requestInputEmail,
@@ -15,8 +19,14 @@ import {
 const SignUp = (props) => {
     const dispatch = useDispatch()
     const {token} = useSelector(state => state.localize);
-    const {avatar} = useSelector(state => state.auth);
+    const {avatar, user} = useSelector(state => state.auth);
     const {username, password, first_name, name, email} = useSelector(state => state.signup);
+    const { from } = props.location.state || { from: { pathname: '/private/' } }
+
+    if (user !== null) {
+        return <Redirect to={from} />
+    }
+
     return (
         <div className="kt-grid__item kt-grid__item--fluid kt-grid kt-grid--hor kt-wrapper kt-page" id="kt-wrapper">
             <Header/>

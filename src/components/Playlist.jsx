@@ -1,6 +1,6 @@
 import React from 'react';
 import {useDispatch, useSelector} from "react-redux";
-import {getPlaylist} from "../modules/playlistManager";
+import {requestImportPlaylist} from "../modules/playlistManager";
 import {toggleSearch} from "../modules/search";
 
 const Playlist = (props) => {
@@ -59,7 +59,7 @@ const Playlist = (props) => {
                         </div>
                     ) : (
                         <button className="btn btn-elevate btn-outline-hover-brand btn-icon"
-                            onClick={() => dispatch(getPlaylist({
+                            onClick={() => dispatch(requestImportPlaylist({
                                     api: api,
                                     id: playlist.id,
                                     image: playlist.image,

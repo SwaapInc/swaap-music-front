@@ -7,6 +7,7 @@
     "http-proxy-middleware": "^0.20.0",
     "query-string": "^6.11.0",
     "react": "^16.11.0",
+    "react-cookie": "^4.0.3",
     "react-dom": "^16.11.0",
     "react-dropzone": "^10.2.1",
     "react-localization": "^1.0.15",
@@ -39,5 +40,8 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "@babel/plugin-proposal-export-default-from": "^7.8.3"
   }
 }

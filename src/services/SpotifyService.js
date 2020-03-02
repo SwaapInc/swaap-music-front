@@ -11,6 +11,13 @@ export function formatData(data) {
 
 class SpotifyService {
 
+    async getPlaylistsForUsers(tokens) {
+        const {accessToken, refreshToken} = tokens
+
+        const {data} = await axios.get(`/api/spotify/user/playlists?access_token=${accessToken}&refresh_token=${refreshToken}`)
+        console.log(data)
+    }
+
     async requestAccessToken(input) {
         const {code, state} = input
         const {data} = await axios.post(`/api/spotify/authentication/callback`, {
@@ -19,15 +26,13 @@ class SpotifyService {
         }).catch(function (error) {
             console.error(error)
             return {
-                'error_message' : 'invalid_token',
-                'err' : error,
+                status: 400,
+                body: `requestAccessToken failed, here was error : ${error}`
             }
         })
+
         return data
     }
-
-
-
 
     async searchTrackFromCompleteRequestInBean(requestInBean) {
         const {title, album, artist} = requestInBean
@@ -35,38 +40,66 @@ class SpotifyService {
         let res = await axios.get(`/api/spotify/search/advanced?artist=${artist.name}&title=${title}&album=${album.name}&type=track`, {})
             .catch(function (error) {
                 console.error(error)
+                return null
             })
         if(res === null){
             res = await axios.get(`/api/spotify/search/advanced?artist=${artist.name}&title=${title}&type=track`, {})
                 .catch(function (error) {
                     console.error(error)
+                    return {
+                        status: 400,
+                        body: `searchTrackFromCompleteRequestInBean failed, here was search parameters : "title: ${title}", "album: ${album}", "artist: ${artist}"`
+                    }
                 })
         }
 
-        const data = formatData(res)
-        return data.length === 0 ? false : data[0]
-
+        if(res.status === 400) {
+            return false
+        } else {
+            const data = formatData(res)
+            return data.length === 0 ? false : data[0]
+        }
     }
 
     async searchTrackBasic(searchValue) {
         const res = await axios.get(`/api/spotify/search?q=${searchValue}&type=track`, {}).catch(function (error) {
             console.error(error);
+            return {
+                status: 400,
+                body: `error during basic search track, here was searchValue : '${searchValue}', error : ${error}`
+            }
         });
 
-        return formatData(res)
+        if(res.status === 400) {
+            return {}
+        } else {
+            return formatData(res)
+        }
     }
 
     async getPlaylistFull(url) {
         const res = await axios.get(`${url}`, {}).catch(function (error) {
             console.error(error);
+            return {
+                status: 400,
+                body: `error during getPlaylistFull, here was url : '${url}', error : ${error}`
+            }
         });
 
-        const items = res.data.tracks.items.map((item) => formatSpotifyTrack(item.track))
+        if(res.status === 400) {
+            return {
+                items: [],
+                total: 0,
+                playlistName: '',
+            }
+        } else {
+            const items = res.data.tracks.items.map((item) => formatSpotifyTrack(item.track))
 
-        return {
-            items,
-            total: res.data.tracks.total,
-            playlistName: res.data.name,
+            return {
+                items,
+                total: res.data.tracks.total,
+                playlistName: res.data.name,
+            }
         }
     }
 
@@ -91,11 +124,19 @@ class SpotifyService {
     }
 
     async getTrackFromId(id) {
-        const {data} = await axios.get(`/api/spotify/get/tracks/${id}`, {}).catch(function (error) {
+        const res = await axios.get(`/api/spotify/get/tracks/${id}`, {}).catch(function (error) {
             console.error(error);
+            return {
+                status: 400,
+                body: `getTrackFromId failed, here was spotify track id : ${id}, here was error : ${error}`
+            }
         });
 
-        return formatSpotifyTrack(data)
+        if(res.status === 400) {
+            return {}
+        } else {
+            return formatSpotifyTrack(res.data)
+        }
     }
 
 }

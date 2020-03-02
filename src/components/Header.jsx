@@ -16,7 +16,10 @@ const Header = () => {
         }}>
             <div className="kt-header__brand kt-grid__item" id="kt_header_brand">
                 <div>
-                    <img alt="Logo" src="/dist/assets/media/logos/logo-1.png"/>
+                    <img alt="Logo" src="/dist/assets/media/logos/SWAAPwhite.png" style={{
+                        width: '150px',
+                        height: '50px'
+                    }}/>
                 </div>
             </div>
             <div className="kt-header__topbar kt-grid__item kt-grid__item--fluid">

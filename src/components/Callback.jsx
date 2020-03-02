@@ -9,16 +9,18 @@ const Callback = (props) => {
     const dispatch = useDispatch();
 
     try {
-        dispatch(requestSSOAuthentication({code, state}))
+        //dispatch(requestSSOAuthentication({code, state}))
     } catch {
-        console.log('SSO FAILED')
+        //console.log('SSO FAILED')
     } finally {
         //props.history.push('/private')
     }
 
 
     return (
-        <div/>
+        <div>
+            <p>{code}</p>
+        </div>
     )
 }
 

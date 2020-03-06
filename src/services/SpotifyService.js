@@ -1,5 +1,6 @@
 import axios from "axios";
 import {formatSpotifyTrack} from "../util/utils";
+import Playlist from "../modeles/Playlist";
 
 export function formatData(data) {
     try {
@@ -12,25 +13,23 @@ export function formatData(data) {
 class SpotifyService {
 
     async getPlaylistsForUsers(tokens) {
-        const {accessToken, refreshToken} = tokens
+        if(tokens) {
+            const {accessToken, refreshToken} = tokens
 
-        const {data} = await axios.get(`/api/spotify/user/playlists?access_token=${accessToken}&refresh_token=${refreshToken}`)
-        console.log(data)
+            const {data} = await axios.get(`/api/spotify/user/playlists?access_token=${accessToken}&refresh_token=${refreshToken}`)
+
+            if(data.status === 200) {
+                return data.body.map(item => new Playlist(item))
+            } else {
+                return []
+            }
+        }
+        return []
     }
 
     async requestAccessToken(input) {
-        const {code, state} = input
-        const {data} = await axios.post(`/api/spotify/authentication/callback`, {
-            code,
-            state
-        }).catch(function (error) {
-            console.error(error)
-            return {
-                status: 400,
-                body: `requestAccessToken failed, here was error : ${error}`
-            }
-        })
-
+        const {code} = input
+        const {data} = await axios.post(`/api/spotify/authentication/callback`, {code})
         return data
     }
 

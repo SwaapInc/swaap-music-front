@@ -3,12 +3,12 @@ export const LOGIN_REQUEST = 'app/auth/LOGIN_REQUEST'
 export const LOGOUT = 'app/auth/LOGOUT'
 export const TOGGLE_LOADING = 'app/auth/LOADING'
 export const USER_DETAILS = 'app/auth/USER_DETAILS'
-export const SSO_CONNEXION_REQUEST = 'app/auth/SSO_CONNEXION'
 export const INPUT_LOGIN = 'app/auth/INPUT_LOGIN'
 export const INPUT_PWD = 'app/auth/INPUT_PWD'
 export const SET_USER_STATE = 'app/auth/SET_USER_STATE'
 export const SET_TOKEN_STATE = 'app/auth/SET_TOKEN_STATE'
 export const UPDATE_USER_PLAYLISTS = "app/auth/UPDATE_USER_PLAYLISTS"
+export const PLAYLISTS_API = "app/auth/PLAYLISTS_API"
 
 export const setToken = (token) => ({
     type: SET_TOKEN_STATE,
@@ -38,6 +38,12 @@ export const loginUser = (userInfo) => ({
     playlistsSaved: userInfo.playlistsSaved,
 })
 
+export const playlistApi = (playlists) => ({
+    type: PLAYLISTS_API,
+    playlistsDeezer: playlists.playlistsDeezer,
+    playlistsSpotify: playlists.playlistsSpotify,
+})
+
 export const logoutUser = () => ({
     type: LOGOUT,
 })
@@ -60,11 +66,6 @@ export const detailUser = () => ({
     type: USER_DETAILS,
 })
 
-export const requestSSOAuthentication = (input) => ({
-    type: SSO_CONNEXION_REQUEST,
-    input,
-})
-
 export default function reducer(
     state = {
         user: null,
@@ -81,7 +82,6 @@ export default function reducer(
             },
             deezer: {
                 accessToken: null,
-                refreshToken: null,
             },
         },
         login: '',
@@ -116,12 +116,11 @@ export default function reducer(
                 playlistsSaved: [],
                 tokens: {
                     spotify: {
-                        accessToken: '',
-                        refreshToken: '',
+                        accessToken: null,
+                        refreshToken: null,
                     },
                     deezer: {
-                        accessToken: '',
-                        refreshToken: '',
+                        accessToken: null,
                     },
                 },
                 login: '',
@@ -153,16 +152,24 @@ export default function reducer(
                 user: action.user !== undefined ? action.user : null
             }
         case SET_TOKEN_STATE:
-            const api = action.token.api
-            const token = action.token.token
-            let newTokens = {
-                ...state.tokens
-            }
-            newTokens[api][token] = action.token.value
+            if(action.token) {
+                const api = action.token.api
+                const token = action.token.token
+                let newTokens = {
+                    ...state.tokens
+                }
+                newTokens[api][token] = action.token.value
 
+                return {
+                    ...state,
+                    tokens: newTokens
+                }
+            }
+        case PLAYLISTS_API :
             return {
-               ...state,
-               tokens: newTokens
+                ...state,
+                playlistsDeezer: action.playlistsDeezer ? action.playlistsDeezer : [],
+                playlistsSpotify: action.playlistsSpotify ? action.playlistsSpotify : [],
             }
         default:
             return state

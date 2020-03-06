@@ -62,9 +62,7 @@ const Body = () => {
             }))
         }
 
-        dispatch(getPlaylistsInfos({
-            tokens
-        }))
+        dispatch(getPlaylistsInfos(tokens))
         }, []
     )
 
@@ -152,14 +150,12 @@ const Body = () => {
                                 </div>
                             </div>
                             <div className="kt-portlet__body">
-                                <div className="kt-section__content">
                                     <div className="kt-section__content">
                                         <div className="kt-widget-2">
                                             <div className="kt-widget-2__content kt-portlet__space-x">
-                                                <div className="row justify-content-center">
                                                     {
                                                         tokens.spotify.accessToken ? (
-                                                            <div>
+                                                            <div className="row justify-content-center">
                                                                 {
                                                                     playlistsSpotify.length ? playlistsSpotify
                                                                         .map((playlist) => {
@@ -175,17 +171,17 @@ const Body = () => {
                                                                 }
                                                             </div>
                                                         ) : (
-                                                            <a href={ssoUrlSpotify} className="btn btn-spotify btn-pill" >
-                                                                <i className="fab fa-spotify"/>
-                                                                {token.connect_to_spotify}
-                                                            </a>
+                                                            <div className="row justify-content-center">
+                                                                <a href={ssoUrlSpotify} className="btn btn-spotify btn-pill" >
+                                                                    <i className="fab fa-spotify"/>
+                                                                    {token.connect_to_spotify}
+                                                                </a>
+                                                            </div>
                                                         )
                                                     }
-                                                </div>
                                             </div>
                                         </div>
                                     </div>
-                                </div>
                             </div>
                         </div>
                     </div>
@@ -201,10 +197,9 @@ const Body = () => {
                                     <div className="kt-section__content">
                                         <div className="kt-widget-2">
                                             <div className="kt-widget-2__content kt-portlet__space-x">
-                                                <div className="row justify-content-center">
                                                     {
                                                         tokens.deezer.accessToken ? (
-                                                            <div>
+                                                            <div className="row justify-content-center">
                                                                 {
                                                                     playlistsDeezer.length ? playlistsDeezer
                                                                         .map((playlist, i) => {
@@ -221,13 +216,14 @@ const Body = () => {
 
                                                             </div>
                                                         ) : (
-                                                            <a href={ssoUrlDeezer} className="btn btn-deezer btn-pill">
-                                                                <i className="socicon-deezer"/>
-                                                                {token.connect_to_deezer}
-                                                            </a>
+                                                            <div className="row justify-content-center">
+                                                                <a href={ssoUrlDeezer} className="btn btn-deezer btn-pill">
+                                                                    <i className="socicon-deezer"/>
+                                                                    {token.connect_to_deezer}
+                                                                </a>
+                                                            </div>
                                                         )
                                                     }
-                                                </div>
                                             </div>
                                         </div>
                                     </div>

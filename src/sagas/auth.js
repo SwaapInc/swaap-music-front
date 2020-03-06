@@ -15,7 +15,7 @@ function* requestLoginUser(input) {
                 user,
                 ...playlists
             }
-        ));
+        ))
     }
     yield put(toggleLoading());
 }

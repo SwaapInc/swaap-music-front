@@ -8,6 +8,7 @@ export const INPUT_PWD = 'app/auth/INPUT_PWD'
 export const SET_USER_STATE = 'app/auth/SET_USER_STATE'
 export const SET_TOKEN_STATE = 'app/auth/SET_TOKEN_STATE'
 export const UPDATE_USER_PLAYLISTS = "app/auth/UPDATE_USER_PLAYLISTS"
+export const PLAYLISTS_API = "app/auth/PLAYLISTS_API"
 
 export const setToken = (token) => ({
     type: SET_TOKEN_STATE,
@@ -35,6 +36,12 @@ export const loginUser = (userInfo) => ({
     playlistsDeezer: userInfo.playlistsDeezer,
     playlistsSpotify: userInfo.playlistsSpotify,
     playlistsSaved: userInfo.playlistsSaved,
+})
+
+export const playlistApi = (playlists) => ({
+    type: PLAYLISTS_API,
+    playlistsDeezer: playlists.playlistsDeezer,
+    playlistsSpotify: playlists.playlistsSpotify,
 })
 
 export const logoutUser = () => ({
@@ -157,6 +164,12 @@ export default function reducer(
                     ...state,
                     tokens: newTokens
                 }
+            }
+        case PLAYLISTS_API :
+            return {
+                ...state,
+                playlistsDeezer: action.playlistsDeezer ? action.playlistsDeezer : [],
+                playlistsSpotify: action.playlistsSpotify ? action.playlistsSpotify : [],
             }
         default:
             return state

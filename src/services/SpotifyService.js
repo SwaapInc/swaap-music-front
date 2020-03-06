@@ -1,5 +1,6 @@
 import axios from "axios";
 import {formatSpotifyTrack} from "../util/utils";
+import Playlist from "../modeles/Playlist";
 
 export function formatData(data) {
     try {
@@ -12,10 +13,18 @@ export function formatData(data) {
 class SpotifyService {
 
     async getPlaylistsForUsers(tokens) {
-        const {accessToken, refreshToken} = tokens
+        if(tokens) {
+            const {accessToken, refreshToken} = tokens
 
-        const {data} = await axios.get(`/api/spotify/user/playlists?access_token=${accessToken}&refresh_token=${refreshToken}`)
-        console.log(data)
+            const {data} = await axios.get(`/api/spotify/user/playlists?access_token=${accessToken}&refresh_token=${refreshToken}`)
+
+            if(data.status === 200) {
+                return data.body.map(item => new Playlist(item))
+            } else {
+                return []
+            }
+        }
+        return []
     }
 
     async requestAccessToken(input) {

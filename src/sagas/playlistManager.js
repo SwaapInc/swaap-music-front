@@ -4,9 +4,15 @@ import DeezerService from "../services/DeezerService";
 import SpotifyService from "../services/SpotifyService";
 import {
     ADD_TO_PLAYLIST,
+    GET_SAVED_PLAYLIST,
+    SAVE_NEW_PLAYLIST,
+    PLAYLISTS_INFOS,
+    IMPORT_PLAYLIST,
     addResultToPlaylist,
-    convertPlaylistProgress, GET_SAVED_PLAYLIST, SAVE_NEW_PLAYLIST, PLAYLISTS_INFOS, IMPORT_PLAYLIST, saveNewPlaylist
+    convertPlaylistProgress,
+    saveNewPlaylist,
 } from "../modules/playlistManager";
+import {playlistApi} from '../modules/auth'
 
 async function getPlaylistTracksFromApi(input, spotifyService, deezerService) {
     switch (input.api) {
@@ -243,8 +249,15 @@ function* importPlaylistFromId(input) {
 }
 
 function* getPlaylistsInfos(tokens) {
-    //const {spotify, deezer} = tokens.tokens
-    //return new SpotifyService().getPlaylistsForUsers(tokens.tokens)
+    const {spotify, deezer} = tokens.tokens
+
+    const playlistsSpotify = yield new SpotifyService().getPlaylistsForUsers(spotify)
+    const playlistsDeezer = yield new DeezerService().getPlaylistsForUsers(deezer)
+
+    yield put(playlistApi({
+        playlistsSpotify,
+        playlistsDeezer,
+    }))
 }
 
 export default function* manageAddPlaylist() {

@@ -38,7 +38,7 @@ ReactDOM.render(
             <BrowserRouter>
                 <Switch>
                     <Route exact path='/' render={() => (
-                        <Redirect to={'/private/home'} />
+                        <Redirect to={'/private/'} />
                     )}/>
                     <Route path='/public/login' component={Login}/>
                     <Route path='/public/signUp' component={SignUp}/>

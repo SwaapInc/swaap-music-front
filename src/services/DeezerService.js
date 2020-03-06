@@ -1,5 +1,6 @@
 import {formatDeezerTrack} from "../util/utils";
 import axios from "axios";
+import Playlist from "../modeles/Playlist";
 
 function formatData(data) {
     try {
@@ -10,6 +11,27 @@ function formatData(data) {
 }
 
 class DeezerService {
+
+    async getPlaylistsForUsers(tokens) {
+        if(tokens) {
+            const {accessToken} = tokens
+
+            const {data} = await axios.get(`/api/deezer/user/playlists?access_token=${accessToken}`)
+
+            if(data.status === 200) {
+                return data.body.map(item => new Playlist(item))
+            } else {
+                return []
+            }
+        }
+        return []
+    }
+
+    async requestAccessToken(input) {
+        const {code} = input
+        const {data} = await axios.post(`/api/deezer/authentication/callback`, {code})
+        return data
+    }
 
     async searchTrackFromCompleteRequestInBean(requestInBean) {
         const {title, album, artist} = requestInBean

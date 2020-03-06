@@ -1,6 +1,6 @@
 import React, {useEffect} from 'react'
 import {useDispatch, useSelector} from "react-redux";
-import {detailUser} from "../modules/auth";
+import {detailUser, setToken} from "../modules/auth";
 import PlaylistManager from "./PlaylistManager";
 import Playlist from "./Playlist";
 import SavedPlaylist from "./SavedPlaylist";
@@ -14,27 +14,59 @@ const Body = () => {
     const {searchBar} = useSelector(state => state.search)
     const dispatch = useDispatch()
     const scope = 'user-read-private user-read-email'
-    const state = 'aaa'
-    const ssoUrl = `https://accounts.spotify.com/authorize?`
+    const ssoUrlSpotify = `https://accounts.spotify.com/authorize?`
         + `response_type=code&client_id=3a16f4201e6f4549b7b16283c35fe93c&scope=${scope}&`
-        + `redirect_uri=https://swaap-music-front.herokuapp.com/public/callback&state=${state}`;
+        + `redirect_uri=https://swaap-music-front.herokuapp.com/public/callback&state=1`;
+
+    const ssoUrlDeezer = `https://connect.deezer.com/oauth/auth.php?`
+        + `app_id=399164&redirect_uri=https://swaap-music-front.herokuapp.com/public/callback`
+        + `&perms=basic_access,email&state=2`;
+
+    function checkObject(user) {
+        return user !== null && user !== undefined && user !== 'null' && user !== 'undefined'
+    }
 
     const [cookies, setCookie] = useCookies([
-        'swaap_user_cookie',
         'swaap_spotify_access_token',
         'swaap_spotify_refresh_token',
         'swaap_deezer_access_token',
-        'swaap_deezer_refresh_token'
     ]);
 
     useEffect(() => {
-        dispatch(getPlaylistsInfos({
-            tokens
-        }))
+        if(checkObject(tokens.deezer.accessToken)) {
+            //if state.tokens.deezer.accessToken defined, set cookies
+            setCookie('swaap_deezer_access_token', tokens.deezer.accessToken, { path: '/private' })
+        }
+        if(checkObject(tokens.spotify.accessToken)) {
+            //if state.tokens.spotify.accessToken defined, set cookies
+            setCookie('swaap_spotify_access_token', tokens.spotify.accessToken, { path: '/private' })
+            setCookie('swaap_spotify_refresh_token', tokens.spotify.refreshToken, { path: '/private' })
+        }
+        if (checkObject(cookies.swaap_spotify_access_token)) {
+            dispatch(setToken({
+                api: 'spotify',
+                token: 'accessToken',
+                value: cookies.swaap_spotify_access_token
+            }))
+            dispatch(setToken({
+                api: 'spotify',
+                token: 'refreshToken',
+                value: cookies.swaap_spotify_refresh_token
+            }))
+        }
+        if (checkObject(cookies.swaap_deezer_access_token)) {
+            dispatch(setToken({
+                api: 'deezer',
+                token: 'accessToken',
+                value: cookies.swaap_deezer_access_token
+            }))
+        }
+
+        dispatch(getPlaylistsInfos(tokens))
         }, []
     )
 
-        return (
+    return (
         <div className="kt-container kt-grid__item kt-grid__item--fluid kt-grid--hor" id="kt-content">
             <PlaylistManager/>
             <div className="kt-container  kt-grid__item kt-grid__item--fluid">
@@ -118,14 +150,12 @@ const Body = () => {
                                 </div>
                             </div>
                             <div className="kt-portlet__body">
-                                <div className="kt-section__content">
                                     <div className="kt-section__content">
                                         <div className="kt-widget-2">
                                             <div className="kt-widget-2__content kt-portlet__space-x">
-                                                <div className="row justify-content-center">
                                                     {
-                                                        cookies.swaap_spotify_access_token ? (
-                                                            <div>
+                                                        tokens.spotify.accessToken ? (
+                                                            <div className="row justify-content-center">
                                                                 {
                                                                     playlistsSpotify.length ? playlistsSpotify
                                                                         .map((playlist) => {
@@ -141,17 +171,17 @@ const Body = () => {
                                                                 }
                                                             </div>
                                                         ) : (
-                                                            <a href={ssoUrl} className="btn btn-spotify btn-pill" >
-                                                                <i className="fab fa-spotify"/>
-                                                                {token.connect_to_spotify}
-                                                            </a>
+                                                            <div className="row justify-content-center">
+                                                                <a href={ssoUrlSpotify} className="btn btn-spotify btn-pill" >
+                                                                    <i className="fab fa-spotify"/>
+                                                                    {token.connect_to_spotify}
+                                                                </a>
+                                                            </div>
                                                         )
                                                     }
-                                                </div>
                                             </div>
                                         </div>
                                     </div>
-                                </div>
                             </div>
                         </div>
                     </div>
@@ -167,10 +197,9 @@ const Body = () => {
                                     <div className="kt-section__content">
                                         <div className="kt-widget-2">
                                             <div className="kt-widget-2__content kt-portlet__space-x">
-                                                <div className="row justify-content-center">
                                                     {
-                                                        cookies.swaap_deezer_access_token ? (
-                                                            <div>
+                                                        tokens.deezer.accessToken ? (
+                                                            <div className="row justify-content-center">
                                                                 {
                                                                     playlistsDeezer.length ? playlistsDeezer
                                                                         .map((playlist, i) => {
@@ -187,13 +216,14 @@ const Body = () => {
 
                                                             </div>
                                                         ) : (
-                                                            <a href={ssoUrl} className="btn btn-deezer btn-pill">
-                                                                <i className="socicon-deezer"/>
-                                                                {token.connect_to_deezer}
-                                                            </a>
+                                                            <div className="row justify-content-center">
+                                                                <a href={ssoUrlDeezer} className="btn btn-deezer btn-pill">
+                                                                    <i className="socicon-deezer"/>
+                                                                    {token.connect_to_deezer}
+                                                                </a>
+                                                            </div>
                                                         )
                                                     }
-                                                </div>
                                             </div>
                                         </div>
                                     </div>

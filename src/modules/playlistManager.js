@@ -9,6 +9,7 @@ export const RESET_PLAYLIST = 'app/playlistManager/RESET_PLAYLIST'
 export const GET_SAVED_PLAYLIST = 'app/playlistManager/GET_SAVED_PLAYLIST'
 export const SAVE_NEW_PLAYLIST = 'app/playlistManager/SAVE_NEW_PLAYLIST'
 export const PLAYLISTS_INFOS = 'app/playlistManager/PLAYLISTS_INFOS'
+export const UPLOAD_PLAYLIST = 'app/playlistManager/UPLOAD_PLAYLIST'
 
 function removeItemFromPlaylist(playlist, action) {
     const {api, id} = action
@@ -32,6 +33,14 @@ function addNewCorrelation(tuple, trackCorrelation) {
             ...trackCorrelation,
             tuple,
         ]
+}
+
+export function uploadPlaylist(playlistInfos) {
+    return {
+        type: UPLOAD_PLAYLIST,
+        playlistInfos,
+    }
+
 }
 
 export function getPlaylistsInfos(tokens) {

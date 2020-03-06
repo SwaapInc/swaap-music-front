@@ -2,7 +2,7 @@ import React from 'react'
 import {useDispatch, useSelector} from "react-redux"
 import Tracks from "./Tracks"
 import {requestSearchTrack, resetSearch, selectApi, toggleSearch} from "../modules/search"
-import {resetPlaylist, updatePlaylistName} from "../modules/playlistManager"
+import {resetPlaylist, updatePlaylistName, uploadPlaylist} from "../modules/playlistManager"
 import {updateUserPlaylists} from "../modules/auth"
 
 const PlaylistManager = () => {
@@ -10,7 +10,7 @@ const PlaylistManager = () => {
     const {playlists, progressBar, playlistName, playlistImage, playlistId, trackCorrelation} = useSelector(
         state => state.playlists)
     // store du reducer "user
-    const {playlistsSaved} = useSelector(state => state.auth);
+    const {playlistsSaved, tokens} = useSelector(state => state.auth);
     const {token} = useSelector(state => state.localize)
     const dispatch = useDispatch()
 
@@ -105,7 +105,7 @@ const PlaylistManager = () => {
                                             &nbsp;
                                             &nbsp;
                                             <button className={[
-                                                api === 1 ? 'btn-brand' : 'btn-secondary',
+                                                api === 1 ? 'btn-spotify' : 'btn-secondary',
                                                 "btn btn-circle btn-sm btn-icon"
                                             ].join(' ')}
                                                     onClick={() => dispatch(selectApi(1))}>
@@ -114,7 +114,7 @@ const PlaylistManager = () => {
                                             &nbsp;
                                             &nbsp;
                                             <button className={[
-                                                api === 2 ? 'btn-brand' : 'btn-secondary',
+                                                api === 2 ? 'btn-deezer' : 'btn-secondary',
                                                 "btn btn-circle btn-sm btn-icon"
                                             ].join(' ')}
                                                     onClick={() => dispatch(selectApi(2))}>
@@ -205,6 +205,31 @@ const PlaylistManager = () => {
                                 <button type="button" className="btn btn-brand"
                                         onClick={() => dispatchUpdateUserPlaylists()}>
                                     {token.button_save_playlist}
+                                </button>
+                                &nbsp;
+                                &nbsp;
+                                <button type="button" className={[
+                                    api === 1 ? 'btn-spotify'
+                                        : api === 2 ? 'btn-deezer'
+                                        : '',
+                                    "btn"
+                                ].join(' ')} onClick={() => dispatch(uploadPlaylist({
+                                    playlists,
+                                    api,
+                                    playlistId,
+                                    playlistName,
+                                    tokens
+                                }))}>
+                                    <i className="fa fa-upload"/>
+                                    {
+                                        api === 1 ? (
+                                            <span>{token.spotify.button_upload_playlist}</span>
+                                        ) : api === 2 ? (
+                                            <span>{token.deezer.button_upload_playlist}</span>
+                                        ) : (
+                                            <span/>
+                                        )
+                                    }
                                 </button>
                             </div>
                             <button type="button" className="btn btn-outline-info"

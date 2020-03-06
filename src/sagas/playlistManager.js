@@ -8,11 +8,13 @@ import {
     SAVE_NEW_PLAYLIST,
     PLAYLISTS_INFOS,
     IMPORT_PLAYLIST,
+    UPLOAD_PLAYLIST,
     addResultToPlaylist,
     convertPlaylistProgress,
     saveNewPlaylist,
 } from "../modules/playlistManager";
 import {playlistApi} from '../modules/auth'
+import {toggleSearch} from '../modules/search'
 
 async function getPlaylistTracksFromApi(input, spotifyService, deezerService) {
     switch (input.api) {
@@ -128,8 +130,7 @@ function* addTrackToPlaylist(input) {
             if (tuple.length > 0) {
                 spotify = yield new SpotifyService().getTrackFromId(tuple[0].dataDeezer)
             } else {
-                spotify =
-                    yield new SpotifyService().searchTrackFromCompleteRequestInBean(requestInBean)
+                spotify = yield new SpotifyService().searchTrackFromCompleteRequestInBean(requestInBean)
             }
 
             if (spotify === false) {
@@ -260,10 +261,80 @@ function* getPlaylistsInfos(tokens) {
     }))
 }
 
+function* uploadPlaylist(playlistInfos) {
+    const {api, playlists, playlistName, playlistId, tokens} = playlistInfos.playlistInfos
+    switch (api) {
+        case 1:
+            const spotifyService = new SpotifyService()
+            const playlistToExportToSpotify = playlists.map((item) => item.dataSpotify.id)
+            let finalSpotifyPlaylistId = ""
+            if(!playlistId) {
+                //creation
+                const userSpotifyId = yield spotifyService.getUserId(tokens.spotify)
+                const newPlaylistId = yield spotifyService.createPlaylistForUser({
+                    tokens: tokens.spotify,
+                    id: userSpotifyId,
+                    playlistName
+                })
+                finalSpotifyPlaylistId = newPlaylistId
+            } else {
+                finalSpotifyPlaylistId = playlistId
+            }
+
+            const updateStatusSpotify = yield spotifyService.updatePlaylist({
+                tokens: tokens.spotify,
+                playlist: playlistToExportToSpotify,
+                playlistId: finalSpotifyPlaylistId
+            })
+
+            if (updateStatusSpotify.status === 201) {
+                //todo notify upload successful
+                yield put(toggleSearch())
+            } else {
+                //todo notify upload failed
+                console.error(updateStatusSpotify)
+            }
+
+
+        case 2 :
+            const deezerService = new DeezerService()
+            const playlistToExportToDeezer =  playlists.map((item) => item.dataDeezer.id)
+            let finalPlaylistDeezerId = ""
+            if(!playlistId) {
+                //creation
+                const newPlaylistId = yield deezerService.createPlaylistForUser({
+                    tokens: tokens.spotify,
+                    playlistName
+                })
+                finalPlaylistDeezerId = newPlaylistId
+            } else {
+                finalPlaylistDeezerId = playlistId
+            }
+
+            const updateStatusDeezer = yield deezerService.updatePlaylist({
+                tokens: tokens.deezer,
+                playlist: playlistToExportToDeezer,
+                playlistId: finalPlaylistDeezerId
+            })
+
+            if (updateStatusDeezer.status === 201) {
+                //todo notify upload successful
+                yield put(toggleSearch())
+            } else {
+                //todo notify upload failed
+                console.error(updateStatusDeezer)
+            }
+
+        default :
+            return []
+    }
+}
+
 export default function* manageAddPlaylist() {
     yield takeEvery(ADD_TO_PLAYLIST, addTrackToPlaylist)
     yield takeEvery(IMPORT_PLAYLIST, importPlaylistFromId)
     yield takeEvery(GET_SAVED_PLAYLIST, importSavedPlaylistFromId)
     yield takeEvery(SAVE_NEW_PLAYLIST, saveNewPlaylist)
     yield takeEvery(PLAYLISTS_INFOS, getPlaylistsInfos)
+    yield takeEvery(UPLOAD_PLAYLIST, uploadPlaylist)
 }

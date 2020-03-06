@@ -14,9 +14,13 @@ const Body = () => {
     const {searchBar} = useSelector(state => state.search)
     const dispatch = useDispatch()
     const scope = 'user-read-private user-read-email'
-    const ssoUrl = `https://accounts.spotify.com/authorize?`
+    const ssoUrlSpotify = `https://accounts.spotify.com/authorize?`
         + `response_type=code&client_id=3a16f4201e6f4549b7b16283c35fe93c&scope=${scope}&`
-        + `redirect_uri=https://swaap-music-front.herokuapp.com/public/callback`;
+        + `redirect_uri=https://swaap-music-front.herokuapp.com/public/callback&state=1`;
+
+    const ssoUrlDeezer = `https://connect.deezer.com/oauth/auth.php?`
+        + `app_id=399164&redirect_uri=https://swaap-music-front.herokuapp.com/public/callback`
+        + `&perms=basic_access,email&state=2`;
 
     function checkObject(user) {
         return user !== null && user !== undefined && user !== 'null' && user !== 'undefined'
@@ -26,14 +30,12 @@ const Body = () => {
         'swaap_spotify_access_token',
         'swaap_spotify_refresh_token',
         'swaap_deezer_access_token',
-        'swaap_deezer_refresh_token'
     ]);
 
     useEffect(() => {
         if(checkObject(tokens.deezer.accessToken)) {
             //if state.tokens.deezer.accessToken defined, set cookies
             setCookie('swaap_deezer_access_token', tokens.deezer.accessToken, { path: '/private' })
-            setCookie('swaap_deezer_refresh_token', tokens.deezer.refreshToken, { path: '/private' })
         }
         if(checkObject(tokens.spotify.accessToken)) {
             //if state.tokens.spotify.accessToken defined, set cookies
@@ -57,11 +59,6 @@ const Body = () => {
                 api: 'deezer',
                 token: 'accessToken',
                 value: cookies.swaap_deezer_access_token
-            }))
-            dispatch(setToken({
-                api: 'deezer',
-                token: 'refreshToken',
-                value: cookies.swaap_deezer_refresh_token
             }))
         }
 
@@ -178,7 +175,7 @@ const Body = () => {
                                                                 }
                                                             </div>
                                                         ) : (
-                                                            <a href={`${ssoUrl}&state=1`} className="btn btn-spotify btn-pill" >
+                                                            <a href={ssoUrlSpotify} className="btn btn-spotify btn-pill" >
                                                                 <i className="fab fa-spotify"/>
                                                                 {token.connect_to_spotify}
                                                             </a>
@@ -224,7 +221,7 @@ const Body = () => {
 
                                                             </div>
                                                         ) : (
-                                                            <a href={`${ssoUrl}&state=1`} className="btn btn-deezer btn-pill">
+                                                            <a href={ssoUrlDeezer} className="btn btn-deezer btn-pill">
                                                                 <i className="socicon-deezer"/>
                                                                 {token.connect_to_deezer}
                                                             </a>

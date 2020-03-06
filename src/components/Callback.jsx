@@ -47,33 +47,23 @@ const Callback = (props) => {
                 break;
             case '2' :
                 const dataDeezer = await new DeezerService().requestAccessToken({code, state})
-
+                console.log(dataDeezer)
                 if(dataDeezer.status === 400) {
-                    console.error(dataSpotify.body)
+                    console.error(dataDeezer.body)
                     return {
                         accessToken: {
                             api: 'deezer',
                             token: 'accessToken',
                             value: null
-                        },
-                        refreshToken: {
-                            api: 'deezer',
-                            token: 'refreshToken',
-                            value: null
                         }
                     }
                 } else {
-                    const {access_token, refresh_token} = dataDeezer.tokens
+                    const {access_token} = dataDeezer.tokens
                     return {
                         accessToken: {
                             api: 'deezer',
                             token: 'accessToken',
                             value: access_token
-                        },
-                        refreshToken: {
-                            api: 'deezer',
-                            token: 'refreshToken',
-                            value: refresh_token
                         }
                     }
                 }

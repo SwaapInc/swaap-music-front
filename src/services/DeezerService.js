@@ -11,6 +11,12 @@ function formatData(data) {
 
 class DeezerService {
 
+    async requestAccessToken(input) {
+        const {code} = input
+        const {data} = await axios.post(`/api/deezer/authentication/callback`, {code})
+        return data
+    }
+
     async searchTrackFromCompleteRequestInBean(requestInBean) {
         const {title, album, artist} = requestInBean
 

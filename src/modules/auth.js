@@ -75,7 +75,6 @@ export default function reducer(
             },
             deezer: {
                 accessToken: null,
-                refreshToken: null,
             },
         },
         login: '',
@@ -115,7 +114,6 @@ export default function reducer(
                     },
                     deezer: {
                         accessToken: null,
-                        refreshToken: null,
                     },
                 },
                 login: '',
@@ -147,16 +145,18 @@ export default function reducer(
                 user: action.user !== undefined ? action.user : null
             }
         case SET_TOKEN_STATE:
-            const api = action.token.api
-            const token = action.token.token
-            let newTokens = {
-                ...state.tokens
-            }
-            newTokens[api][token] = action.token.value
+            if(action.token) {
+                const api = action.token.api
+                const token = action.token.token
+                let newTokens = {
+                    ...state.tokens
+                }
+                newTokens[api][token] = action.token.value
 
-            return {
-               ...state,
-               tokens: newTokens
+                return {
+                    ...state,
+                    tokens: newTokens
+                }
             }
         default:
             return state

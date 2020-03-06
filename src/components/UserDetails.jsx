@@ -56,7 +56,7 @@ const UserDetails = () => {
                 <div className="kt-margin-t-40">
                     <button type="button" className="btn btn-brand btn-font-sm btn-upper btn-bold"
                         onClick={() => {
-                            setCookie('swaap_user_cookie',undefined, {path: '/private'})
+                            setCookie('swaap_user_cookie',undefined, {path: '/'})
                             dispatch(logoutUser())
                         }}>
                         {token.logout}

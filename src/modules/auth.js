@@ -3,7 +3,6 @@ export const LOGIN_REQUEST = 'app/auth/LOGIN_REQUEST'
 export const LOGOUT = 'app/auth/LOGOUT'
 export const TOGGLE_LOADING = 'app/auth/LOADING'
 export const USER_DETAILS = 'app/auth/USER_DETAILS'
-export const SSO_CONNEXION_REQUEST = 'app/auth/SSO_CONNEXION'
 export const INPUT_LOGIN = 'app/auth/INPUT_LOGIN'
 export const INPUT_PWD = 'app/auth/INPUT_PWD'
 export const SET_USER_STATE = 'app/auth/SET_USER_STATE'
@@ -60,11 +59,6 @@ export const detailUser = () => ({
     type: USER_DETAILS,
 })
 
-export const requestSSOAuthentication = (input) => ({
-    type: SSO_CONNEXION_REQUEST,
-    input,
-})
-
 export default function reducer(
     state = {
         user: null,
@@ -116,12 +110,12 @@ export default function reducer(
                 playlistsSaved: [],
                 tokens: {
                     spotify: {
-                        accessToken: '',
-                        refreshToken: '',
+                        accessToken: null,
+                        refreshToken: null,
                     },
                     deezer: {
-                        accessToken: '',
-                        refreshToken: '',
+                        accessToken: null,
+                        refreshToken: null,
                     },
                 },
                 login: '',

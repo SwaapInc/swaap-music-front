@@ -1,6 +1,6 @@
 import React, {useEffect} from 'react'
 import {useDispatch, useSelector} from "react-redux";
-import {detailUser} from "../modules/auth";
+import {detailUser, setToken} from "../modules/auth";
 import PlaylistManager from "./PlaylistManager";
 import Playlist from "./Playlist";
 import SavedPlaylist from "./SavedPlaylist";
@@ -18,8 +18,11 @@ const Body = () => {
         + `response_type=code&client_id=3a16f4201e6f4549b7b16283c35fe93c&scope=${scope}&`
         + `redirect_uri=https://swaap-music-front.herokuapp.com/public/callback`;
 
-    const [cookies] = useCookies([
-        'swaap_user_cookie',
+    function checkObject(user) {
+        return user !== null && user !== undefined && user !== 'null' && user !== 'undefined'
+    }
+
+    const [cookies, setCookie] = useCookies([
         'swaap_spotify_access_token',
         'swaap_spotify_refresh_token',
         'swaap_deezer_access_token',
@@ -27,13 +30,48 @@ const Body = () => {
     ]);
 
     useEffect(() => {
+        if(checkObject(tokens.deezer.accessToken)) {
+            //if state.tokens.deezer.accessToken defined, set cookies
+            setCookie('swaap_deezer_access_token', tokens.deezer.accessToken, { path: '/private' })
+            setCookie('swaap_deezer_refresh_token', tokens.deezer.refreshToken, { path: '/private' })
+        }
+        if(checkObject(tokens.spotify.accessToken)) {
+            //if state.tokens.spotify.accessToken defined, set cookies
+            setCookie('swaap_spotify_access_token', tokens.spotify.accessToken, { path: '/private' })
+            setCookie('swaap_spotify_refresh_token', tokens.spotify.refreshToken, { path: '/private' })
+        }
+        if (checkObject(cookies.swaap_spotify_access_token)) {
+            dispatch(setToken({
+                api: 'spotify',
+                token: 'accessToken',
+                value: cookies.swaap_spotify_access_token
+            }))
+            dispatch(setToken({
+                api: 'spotify',
+                token: 'refreshToken',
+                value: cookies.swaap_spotify_refresh_token
+            }))
+        }
+        if (checkObject(cookies.swaap_deezer_access_token)) {
+            dispatch(setToken({
+                api: 'deezer',
+                token: 'accessToken',
+                value: cookies.swaap_deezer_access_token
+            }))
+            dispatch(setToken({
+                api: 'deezer',
+                token: 'refreshToken',
+                value: cookies.swaap_deezer_refresh_token
+            }))
+        }
+
         dispatch(getPlaylistsInfos({
             tokens
         }))
         }, []
     )
 
-        return (
+    return (
         <div className="kt-container kt-grid__item kt-grid__item--fluid kt-grid--hor" id="kt-content">
             <PlaylistManager/>
             <div className="kt-container  kt-grid__item kt-grid__item--fluid">
@@ -123,7 +161,7 @@ const Body = () => {
                                             <div className="kt-widget-2__content kt-portlet__space-x">
                                                 <div className="row justify-content-center">
                                                     {
-                                                        cookies.swaap_spotify_access_token ? (
+                                                        tokens.spotify.accessToken ? (
                                                             <div>
                                                                 {
                                                                     playlistsSpotify.length ? playlistsSpotify
@@ -168,7 +206,7 @@ const Body = () => {
                                             <div className="kt-widget-2__content kt-portlet__space-x">
                                                 <div className="row justify-content-center">
                                                     {
-                                                        cookies.swaap_deezer_access_token ? (
+                                                        tokens.deezer.accessToken ? (
                                                             <div>
                                                                 {
                                                                     playlistsDeezer.length ? playlistsDeezer

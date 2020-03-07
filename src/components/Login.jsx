@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react'
+import React from 'react'
 import {
 	Redirect
 } from 'react-router-dom'
@@ -6,18 +6,12 @@ import {requestInputLogin, requestInputPwd, requestLoginUser} from "../modules/a
 import {useDispatch, useSelector} from "react-redux";
 import Header from "./Header";
 import Footer from "./Footer";
-import {useCookies} from "react-cookie";
 
 const Login = (props) => {
 	const dispatch = useDispatch()
 	const { from } = props.location.state || { from: { pathname: '/private/' } }
 	const {user, login, pwd} = useSelector(state => state.auth);
     const {token} = useSelector(state => state.localize);
-    const scope = 'user-read-private user-read-email'
-    const state = 'aaa'
-    const ssoUrl = `https://accounts.spotify.com/authorize?`
-        + `response_type=code&client_id=3a16f4201e6f4549b7b16283c35fe93c&scope=${scope}&`
-        + `redirect_uri=https://swaap-music-front.herokuapp.com/public/callback&state=${state}`;
 
 	if (user !== null) {
 		return <Redirect to={from} />
@@ -83,6 +77,8 @@ const Login = (props) => {
                                          onClick={() => props.history.push('/public/signup/')}>
                                         {token.login_page.sign_up}
                                     </div>
+                                    &nbsp;
+                                    &nbsp;
                                     <div className="btn btn-brand btn-elevate btn-pill"
                                          id="kt_login_submit"
                                          onClick={() => dispatch(requestLoginUser({

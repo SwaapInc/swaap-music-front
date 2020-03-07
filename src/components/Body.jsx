@@ -13,14 +13,14 @@ const Body = () => {
     const {token} = useSelector(state => state.localize);
     const {searchBar} = useSelector(state => state.search)
     const dispatch = useDispatch()
-    const scope = 'user-read-private user-read-email'
+    const scope = 'user-read-private playlist-read-private playlist-modify-public playlist-modify-private'
     const ssoUrlSpotify = `https://accounts.spotify.com/authorize?`
         + `response_type=code&client_id=3a16f4201e6f4549b7b16283c35fe93c&scope=${scope}&`
         + `redirect_uri=https://swaap-music-front.herokuapp.com/public/callback&state=1`;
 
     const ssoUrlDeezer = `https://connect.deezer.com/oauth/auth.php?`
         + `app_id=399164&redirect_uri=https://swaap-music-front.herokuapp.com/public/callback`
-        + `&perms=basic_access,email&state=2`;
+        + `&perms=manage_library,basic_access&state=2`;
 
     function checkObject(user) {
         return user !== null && user !== undefined && user !== 'null' && user !== 'undefined'
@@ -146,7 +146,7 @@ const Body = () => {
                         <div className="kt-portlet">
                             <div className="kt-portlet__head">
                                 <div className="kt-portlet__head-label">
-                                    <h3 className="kt-portlet__head-title">{token.spotify}</h3>
+                                    <h3 className="kt-portlet__head-title">{token.spotify.title}</h3>
                                 </div>
                             </div>
                             <div className="kt-portlet__body">
@@ -189,7 +189,7 @@ const Body = () => {
                         <div className="kt-portlet">
                             <div className="kt-portlet__head">
                                 <div className="kt-portlet__head-label">
-                                    <h3 className="kt-portlet__head-title">{token.deezer}</h3>
+                                    <h3 className="kt-portlet__head-title">{token.deezer.title}</h3>
                                 </div>
                             </div>
                             <div className="kt-portlet__body">

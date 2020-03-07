@@ -96,6 +96,59 @@ class DeezerService {
         }
     }
 
+    async createPlaylistForUser(input) {
+        const {tokens, playlistName} = input
+        const {accessToken} = tokens
+        const {data} = await axios.post(`/api/deezer/user/playlists`, {
+            accessToken,
+            playlistName
+        }).catch(function (error) {
+            console.error(error);
+        });
+        if (data.status === 201) {
+            return data.body.id
+        } else {
+            return null
+        }
+    }
+
+    async updatePlaylist(input) {
+        const {tokens, playlist, playlistId} = input
+        const {accessToken} = tokens
+        let currentTrack = 0,
+            cpt = 1
+        let trackNumber = playlist.length
+        let res
+        let playlistTemp
+        while(currentTrack < trackNumber) {
+            //add what's left
+            playlistTemp = playlist.slice(currentTrack, cpt * 75)
+            res = await axios.post(`/api/deezer/playlists`, {
+                accessToken,
+                playlistId,
+                playlist: playlistTemp
+            }).catch(function (error) {
+                return {
+                    status: 400,
+                    body: `update of playlist ${playlistId} failed, here was error : ${error}`
+                }
+            })
+            cpt++
+            currentTrack+= 75
+        }
+
+        if(res.status === 201) {
+            return {
+                status: 201,
+                message: `update of playlist ${playlistId} successful`
+            }
+        } else {
+            return {
+                status: res.status,
+                message: res.body,
+            }
+        }
+    }
 }
 
 export default DeezerService

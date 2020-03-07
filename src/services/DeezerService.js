@@ -100,7 +100,7 @@ class DeezerService {
         const {tokens, playlistName} = input
         const {accessToken} = tokens
 
-        const {data} = await axios.post(`/api/spotify/user/playlists`, {
+        const {data} = await axios.post(`/api/deezer/user/playlists`, {
             accessToken,
             playlistName
         }).catch(function (error) {

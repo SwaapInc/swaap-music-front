@@ -308,7 +308,7 @@ function* uploadPlaylist(playlistInfos) {
             if(!playlistId || playlistApi !== 2) {
                 //creation
                 const newPlaylistId = yield deezerService.createPlaylistForUser({
-                    tokens: tokens.spotify,
+                    tokens: tokens.deezer,
                     playlistName
                 })
                 finalPlaylistDeezerId = newPlaylistId
@@ -328,6 +328,7 @@ function* uploadPlaylist(playlistInfos) {
             } else {
                 //todo notify upload failed
                 console.error(updateStatusDeezer)
+                yield put(toggleSearch())
             }
 
         default :

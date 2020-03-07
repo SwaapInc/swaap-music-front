@@ -99,7 +99,6 @@ class DeezerService {
     async createPlaylistForUser(input) {
         const {tokens, playlistName} = input
         const {accessToken} = tokens
-
         const {data} = await axios.post(`/api/deezer/user/playlists`, {
             accessToken,
             playlistName
@@ -138,18 +137,15 @@ class DeezerService {
             currentTrack+= 75
         }
 
-        console.log('res')
-        console.log(res)
-
-        if(res.status !== 201 && res.status !== 200) {
-            return {
-                status: res.status,
-                message: res.body,
-            }
-        } else {
+        if(res.status === 201) {
             return {
                 status: 201,
                 message: `update of playlist ${playlistId} successful`
+            }
+        } else {
+            return {
+                status: res.status,
+                message: res.body,
             }
         }
     }

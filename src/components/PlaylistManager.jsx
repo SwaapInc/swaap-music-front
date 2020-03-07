@@ -7,8 +7,7 @@ import {updateUserPlaylists} from "../modules/auth"
 
 const PlaylistManager = () => {
     const {tracks, searchBar, searchValue, api} = useSelector(state => state.search)
-    const {playlists, progressBar, playlistName, playlistImage, playlistId, trackCorrelation} = useSelector(
-        state => state.playlists)
+    const {playlists, progressBar, playlistName, playlistImage, playlistId, trackCorrelation, playlistApi} = useSelector(state => state.playlists)
     // store du reducer "user
     const {playlistsSaved, tokens} = useSelector(state => state.auth);
     const {token} = useSelector(state => state.localize)
@@ -218,7 +217,8 @@ const PlaylistManager = () => {
                                     api,
                                     playlistId,
                                     playlistName,
-                                    tokens
+                                    tokens,
+                                    playlistApi
                                 }))}>
                                     <i className="fa fa-upload"/>
                                     {

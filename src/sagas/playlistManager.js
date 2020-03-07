@@ -73,16 +73,18 @@ function* importSavedPlaylistFromId(input) {
                                               id,
                                               playlistName,
                                               image,
+                                                api: 0,
                                           }))
     }
 
     yield put(convertPlaylistProgress({
-                                          playlist,
-                                          progress: 100,
-                                          id,
-                                          playlistName,
-                                          image,
-                                      }))
+        playlist,
+        progress: 100,
+        id,
+        playlistName,
+        image,
+        api: 0
+    }))
 
 }
 
@@ -202,12 +204,13 @@ function* importPlaylistFromId(input) {
                         }
                     ]
                     yield put(convertPlaylistProgress({
-                                                          playlist,
-                                                          progress: (playlist.length / total) * 100,
-                                                          id,
-                                                          playlistName,
-                                                          image,
-                                                      }))
+                        playlist,
+                        progress: (playlist.length / total) * 100,
+                        id,
+                        playlistName,
+                        image,
+                        api,
+                    }))
                 }
             }
             break;
@@ -227,12 +230,13 @@ function* importPlaylistFromId(input) {
                         }
                     ]
                     yield put(convertPlaylistProgress({
-                                                          playlist,
-                                                          progress: (playlist.length / total) * 100,
-                                                          id,
-                                                          playlistName,
-                                                          image,
-                                                      }))
+                        playlist,
+                        progress: (playlist.length / total) * 100,
+                        id,
+                        playlistName,
+                        image,
+                        api
+                    }))
                 }
             }
             break;
@@ -241,12 +245,13 @@ function* importPlaylistFromId(input) {
             break;
     }
     yield put(convertPlaylistProgress({
-                                          playlist,
-                                          progress: 100,
-                                          id,
-                                          playlistName,
-                                          image,
-                                      }))
+        playlist,
+        progress: 100,
+        id,
+        playlistName,
+        image,
+        api
+    }))
 }
 
 function* getPlaylistsInfos(tokens) {
@@ -262,13 +267,13 @@ function* getPlaylistsInfos(tokens) {
 }
 
 function* uploadPlaylist(playlistInfos) {
-    const {api, playlists, playlistName, playlistId, tokens} = playlistInfos.playlistInfos
+    const {api, playlists, playlistName, playlistId, playlistApi, tokens} = playlistInfos.playlistInfos
     switch (api) {
         case 1:
             const spotifyService = new SpotifyService()
             const playlistToExportToSpotify = playlists.map((item) => item.dataSpotify.id)
             let finalSpotifyPlaylistId = ""
-            if(!playlistId) {
+            if(!playlistId || playlistApi !== 1) {
                 //creation
                 const userSpotifyId = yield spotifyService.getUserId(tokens.spotify)
                 const newPlaylistId = yield spotifyService.createPlaylistForUser({
@@ -298,9 +303,9 @@ function* uploadPlaylist(playlistInfos) {
 
         case 2 :
             const deezerService = new DeezerService()
-            const playlistToExportToDeezer =  playlists.map((item) => item.dataDeezer.id)
+            const playlistToExportToDeezer = playlists.map((item) => item.dataDeezer.id)
             let finalPlaylistDeezerId = ""
-            if(!playlistId) {
+            if(!playlistId || playlistApi !== 2) {
                 //creation
                 const newPlaylistId = yield deezerService.createPlaylistForUser({
                     tokens: tokens.spotify,

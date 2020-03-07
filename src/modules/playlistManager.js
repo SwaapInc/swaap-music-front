@@ -115,6 +115,7 @@ export default function reducer(
         playlistId: 0,
         playlistName: '',
         playlistImage: '',
+        playlistApi: 0,
         trackCorrelation: [],
     },
     action,
@@ -161,6 +162,7 @@ export default function reducer(
                 playlistId: action.playlist.id,
                 playlistName: action.playlist.playlistName,
                 playlistImage: action.playlist.image,
+                playlistApi: action.playlist.api,
             };
         case UPDATE_PLAYLIST_NAME:
             return {
@@ -175,6 +177,7 @@ export default function reducer(
                 playlistId: 0,
                 playlistName: '',
                 playlistImage: '',
+                playlistApi: 0,
             }
         default:
             return state

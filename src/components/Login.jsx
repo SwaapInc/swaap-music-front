@@ -71,23 +71,21 @@ const Login = (props) => {
                                 }}>
                                     {token.login_page.forgot_password}
                                 </div>
-                                <div>
-                                    <div className="btn btn-pill btn-outline-brand"
+                                <button className="btn btn-pill btn-outline-brand"
                                          id="kt_login_submit"
                                          onClick={() => props.history.push('/public/signup/')}>
                                         {token.login_page.sign_up}
-                                    </div>
+                                    </button>
                                     &nbsp;
                                     &nbsp;
-                                    <div className="btn btn-brand btn-elevate btn-pill"
+                                    <button className="btn btn-brand btn-elevate btn-pill"
                                          id="kt_login_submit"
                                          onClick={() => dispatch(requestLoginUser({
                                              username: login,
                                              password: pwd
                                          }))}>
                                         {token.login_page.sign_in}
-                                    </div>
-                                </div>
+                                    </button>
                             </div>
                         </div>
                     </div>

@@ -175,22 +175,9 @@ class SpotifyService {
             cpt = 1
         let trackNumber = playlist.length
         let res
-        let playlistTemp/* = playlist.slice(currentTrack, cpt * 75)
-        //replace content of playlist with those
-        res = await axios.put(`/api/spotify/playlists`, {
-            accessToken,
-            playlistId,
-            playlist: playlistTemp
-        }).catch(function (error) {
-            return {
-                status: 400,
-                body: `update of playlist ${playlistId} failed, here was error : ${error}`
-            }
-        })
-        cpt++
-        currentTrack+= 75*/
+        let playlistTemp
 
-        while(currentTrack < trackNumber) {
+        while(currentTrack <= trackNumber) {
             //add what's left
             playlistTemp = playlist.slice(currentTrack, cpt * 75)
             res = await axios.post(`/api/spotify/playlists`, {
@@ -204,7 +191,7 @@ class SpotifyService {
                 }
             })
             cpt++
-            currentTrack+= 75
+            currentTrack += 75
         }
 
         if(res.status !== 201 && res.status !== 200) {

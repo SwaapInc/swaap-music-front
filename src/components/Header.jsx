@@ -15,12 +15,10 @@ const Header = () => {
             zIndex: '1051'
         }}>
             <div className="kt-header__brand kt-grid__item" id="kt_header_brand">
-                <div>
                     <img alt="Logo" src="/dist/assets/media/logos/SWAAPwhite.png" style={{
                         width: '150px',
                         height: '50px'
                     }}/>
-                </div>
             </div>
             <div className="kt-header__topbar kt-grid__item kt-grid__item--fluid">
                 {user ?
@@ -103,7 +101,18 @@ const Header = () => {
                             </div>
                         </div>
                     ) : (
-                            <div/>
+                        <div className="kt-header__topbar kt-grid__item kt-grid__item--fluid">
+                            <a href='/private/home' className="kt-header__topbar kt-grid__item kt-grid__item--fluid">
+                                <div className="kt-header__topbar-item kt-header__topbar-item--search">
+                                    <div className="kt-header__topbar-wrapper"
+                                         id="kt_offcanvas_toolbar_search_toggler_btn"
+                                         onClick={() => {}}>
+                             <span className="kt-header__topbar-icon"><i
+                                 className="fa fa-home"/></span>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
                         )}
                 </div>
             </div>

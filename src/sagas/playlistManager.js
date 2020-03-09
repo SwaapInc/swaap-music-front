@@ -15,6 +15,22 @@ import {playlistApi, UPDATE_USER_PLAYLISTS} from '../modules/auth'
 import {toggleSearch} from '../modules/search'
 import PlaylistService from "../services/PlaylistService";
 
+
+async function searchPlaylists(tokens) {
+     const {spotify, deezer, ownerId} = tokens.tokens
+
+    const playlistsUser = yield new PlaylistService().getPlaylistsForUsers(ownerId)
+    const playlistsSpotify = await new SpotifyService().getPlaylistsForUsers(spotify)
+    const playlistsDeezer = await new DeezerService().getPlaylistsForUsers(deezer)
+
+    return playlistApi({
+        playlistsSpotify,
+        playlistsDeezer,
+        playlistsUser
+    })
+
+}
+
 async function getPlaylistTracksFromApi(input, spotifyService, deezerService) {
     switch (input.api) {
         case 1:
@@ -264,85 +280,93 @@ function* importPlaylistFromId(input) {
 }
 
 function* getPlaylistsInfos(tokens) {
-    const {spotify, deezer, ownerId} = tokens.tokens
-
-    const playlistsUser = yield new PlaylistService().getPlaylistsForUsers(ownerId)
-    const playlistsSpotify = yield new SpotifyService().getPlaylistsForUsers(spotify)
-    const playlistsDeezer = yield new DeezerService().getPlaylistsForUsers(deezer)
-
-    yield put(playlistApi({
-                              playlistsSpotify,
-                              playlistsDeezer,
-                              playlistsUser
-                          }))
+    const playlists = yield searchPlaylists(tokens)
+    yield put(playlistApi(playlists))
 }
 
 function* uploadPlaylist(playlistInfos) {
     const {api, playlists, playlistName, playlistId, playlistApi, tokens} = playlistInfos.playlistInfos
-    switch (api) {
-        case 1:
-            const spotifyService = new SpotifyService()
-            const playlistToExportToSpotify = playlists.map((item) => item.dataSpotify.id)
-            let finalSpotifyPlaylistId = ""
-            if (!playlistId || playlistApi !== 1) {
-                //creation
-                const userSpotifyId = yield spotifyService.getUserId(tokens.spotify)
-                const newPlaylistId = yield spotifyService.createPlaylistForUser({
-                                                                                     tokens: tokens.spotify,
-                                                                                     id: userSpotifyId,
-                                                                                     playlistName
-                                                                                 })
-                finalSpotifyPlaylistId = newPlaylistId
-            } else {
-                finalSpotifyPlaylistId = playlistId
-            }
+    if(playlists.length > 0) {
+        switch (api) {
+            case 1:
+                if(tokens.spotify.accessToken) {
+                    const spotifyService = new SpotifyService()
+                    const playlistToExportToSpotify = playlists.map((item) => item.dataSpotify.id)
+                    let finalSpotifyPlaylistId = ""
+                    if(!playlistId || playlistApi !== 1) {
+                        //creation
+                        const userSpotifyId = yield spotifyService.getUserId(tokens.spotify)
+                        const newPlaylistId = yield spotifyService.createPlaylistForUser({
+                            tokens: tokens.spotify,
+                            id: userSpotifyId,
+                            playlistName
+                        })
+                        finalSpotifyPlaylistId = newPlaylistId
+                    } else {
+                        finalSpotifyPlaylistId = playlistId
+                    }
 
-            const updateStatusSpotify = yield spotifyService.updatePlaylist({
-                                                                                tokens: tokens.spotify,
-                                                                                playlist: playlistToExportToSpotify,
-                                                                                playlistId: finalSpotifyPlaylistId
-                                                                            })
+                    const updateStatusSpotify = yield spotifyService.updatePlaylist({
+                        tokens: tokens.spotify,
+                        playlist: playlistToExportToSpotify,
+                        playlistId: finalSpotifyPlaylistId
+                    })
 
-            if (updateStatusSpotify.status === 201) {
-                //todo notify upload successful
-                yield put(toggleSearch())
-            } else {
-                //todo notify upload failed
-                console.error(updateStatusSpotify)
-            }
+                    console.log('updateStatusSpotify')
+                    console.log(updateStatusSpotify)
 
-        case 2 :
-            const deezerService = new DeezerService()
-            const playlistToExportToDeezer = playlists.map((item) => item.dataDeezer.id)
-            let finalPlaylistDeezerId = ""
-            if (!playlistId || playlistApi !== 2) {
-                //creation
-                const newPlaylistId = yield deezerService.createPlaylistForUser({
-                                                                                    tokens: tokens.deezer,
-                                                                                    playlistName
-                                                                                })
-                finalPlaylistDeezerId = newPlaylistId
-            } else {
-                finalPlaylistDeezerId = playlistId
-            }
+                    if (updateStatusSpotify.status === 201) {
+                        //todo notify upload successful
+                        yield put(getPlaylistsInfos(tokens))
+                        yield put(toggleSearch())
+                    } else {
+                        //todo notify upload failed
+                        console.error(updateStatusSpotify)
+                    }
+                } else {
+                    //todo notify user he's not connected to spotify
+                    console.error('missing access token')
+                }
+                break
+            case 2 :
+                if(tokens.deezer.accessToken) {
+                    const deezerService = new DeezerService()
+                    const playlistToExportToDeezer = playlists.map((item) => item.dataDeezer.id)
+                    let finalPlaylistDeezerId = ""
+                    if(!playlistId || playlistApi !== 2) {
+                        //creation
+                        const newPlaylistId = yield deezerService.createPlaylistForUser({
+                            tokens: tokens.deezer,
+                            playlistName
+                        })
+                        finalPlaylistDeezerId = newPlaylistId
+                    } else {
+                        finalPlaylistDeezerId = playlistId
+                    }
 
-            const updateStatusDeezer = yield deezerService.updatePlaylist({
-                                                                              tokens: tokens.deezer,
-                                                                              playlist: playlistToExportToDeezer,
-                                                                              playlistId: finalPlaylistDeezerId
-                                                                          })
+                    const updateStatusDeezer = yield deezerService.updatePlaylist({
+                        tokens: tokens.deezer,
+                        playlist: playlistToExportToDeezer,
+                        playlistId: finalPlaylistDeezerId
+                    })
 
-            if (updateStatusDeezer.status === 201) {
-                //todo notify upload successful
-                yield put(toggleSearch())
-            } else {
-                //todo notify upload failed
-                console.error(updateStatusDeezer)
-                yield put(toggleSearch())
-            }
-
-        default :
-            return []
+                    if (updateStatusDeezer.status === 201) {
+                        //todo notify upload successful
+                        yield put(getPlaylistsInfos(tokens))
+                        yield put(toggleSearch())
+                    } else {
+                        //todo notify upload failed
+                        console.error(updateStatusDeezer)
+                        yield put(toggleSearch())
+                    }
+                } else {
+                    //todo notify user he's not connected to spotify
+                    console.error('missing access token')
+                }
+                break
+            default :
+                return []
+        }
     }
 }
 

@@ -143,8 +143,10 @@ const SignUp = (props) => {
                             </div>
                         </div>
                     </div>
-                    <div className="kt-portlet__foot">
-                        <div className="btn btn-brand"
+                    <div className="kt-portlet__foot justify-content-between" style={{
+                        display: "inherit"
+                    }}>
+                        <div className="btn btn-brand "
                             onClick={() => dispatch(requestSignUpUser({
                                 username,
                                 password,
@@ -154,6 +156,10 @@ const SignUp = (props) => {
                             }))}>
                             {token.login_page.sign_up}
                         </div>
+                        <span className="form-text text-muted"
+                            style={{
+                                width: "75%"
+                            }}>conformément à la loi informatique et libertés rgpd, vous bénéficiez d'un droit d'accès, de rectification, de suppression, de limitation et d'opposition de vos données personnels.</span>
                     </div>
                 </div>
             </div>

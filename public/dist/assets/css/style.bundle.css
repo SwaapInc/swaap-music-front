@@ -7726,10 +7726,17 @@ button.btn {
     background-color: #1db954;
     border-color: #13B44A;
     color: #ffffff; }
-.btn-spotify:hover {
+    .btn-spotify:hover {
     color: #fff;
     background-color: #13B44A;
     border-color: #13B44A; }
+
+.btn-disbaled {
+    opacity: 0.3;
+    border: none;}
+    .btn-disbaled:hover {
+        opacity: 0.3;
+        border: none;}
 
 .btn-brand {
   color: #fff;

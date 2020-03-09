@@ -137,7 +137,7 @@ class DeezerService {
             currentTrack+= 75
         }
 
-        if(res.status === 201) {
+        if(res.status === 201 && res.status === 200) {
             return {
                 status: 201,
                 message: `update of playlist ${playlistId} successful`

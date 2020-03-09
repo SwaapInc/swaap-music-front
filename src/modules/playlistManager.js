@@ -127,22 +127,27 @@ export default function reducer(
                 ...state,
             }
         case ADD_TRACK:
-            const newTrackCorrelation = addNewCorrelation({
+            if (action.apis.spotify && action.apis.deezer) {
+                const newTrackCorrelation = addNewCorrelation({
                     dataSpotify :  action.apis.spotify.id,
                     dataDeezer : action.apis.deezer.id,
                 }, state.trackCorrelation)
-            return {
-                ...state,
-                playlists : [
-                    ...state.playlists,
-                    {
-                        dataSpotify :  action.apis.spotify,
-                        dataDeezer : action.apis.deezer,
-                    }
-                ],
-                trackCorrelation : newTrackCorrelation,
-                loadingAddTrack: false,
-                playlistImage: state.playlistImage === '' ? action.apis.spotify.album.image : state.playlistImage
+                return {
+                    ...state,
+                    playlists : [
+                        ...state.playlists,
+                        {
+                            dataSpotify :  action.apis.spotify,
+                            dataDeezer : action.apis.deezer,
+                        }
+                    ],
+                    trackCorrelation : newTrackCorrelation,
+                    loadingAddTrack: false,
+                    playlistImage: state.playlistImage === '' ? action.apis.spotify.album.image : state.playlistImage
+                }
+            } else {
+                console.error('cannot find correlation for tracks : ' + JSON.stringify(action.apis))
+                return state
             }
         case REMOVE_TRACK:
             const newPlaylist = removeItemFromPlaylist(state.playlists, action)

@@ -208,10 +208,10 @@ const PlaylistManager = () => {
                                 &nbsp;
                                 &nbsp;
                                 <button type="button" className={[
-                                    api === 1 ? 'btn-spotify'
-                                              : api === 2 ? 'btn-deezer'
-                                                          : '',
-                                    "btn"
+                                    'btn',
+                                    api === 1 ? !tokens.spotify.accessToken ? 'btn-spotify btn-disabled' : 'btn-spotify' : '',
+                                    api === 2 ? !tokens.deezer.accessToken ? 'btn-deezer btn-disabled' : 'btn-deezer' : ''
+
                                 ].join(' ')} onClick={() => dispatch(uploadPlaylist({
                                                                                         playlists,
                                                                                         api,
@@ -223,7 +223,7 @@ const PlaylistManager = () => {
                                     <i className="fa fa-upload"/>
                                     {
                                         api === 1 ? (
-                                            <span>{token.spotify.button_upload_playlist}</span>
+                                            <span>{playlistApi === 1 ? token.spotify.button_update_playlist : token.spotify.button_upload_playlist}</span>
                                         ) : api === 2 ? (
                                             <span>{token.deezer.button_upload_playlist}</span>
                                         ) : (

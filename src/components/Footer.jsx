@@ -6,7 +6,6 @@ const Footer = () => (
             <div className="kt-footer__copyright">
                 2019&nbsp;©&nbsp;Swaap-music Inc
             </div>
-            <div className="kt-footer__menu"/>
         </div>
     </div>
 )

@@ -15,8 +15,7 @@ class PlaylistService {
             .catch(function (error) {
             console.log(error)
         })
-
-        return result
+        return result.data
     }
 
     async updatePlaylist(playlist, ownerId) {

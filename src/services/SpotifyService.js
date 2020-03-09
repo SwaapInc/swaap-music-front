@@ -17,7 +17,6 @@ class SpotifyService {
             const {accessToken, refreshToken} = tokens
 
             const {data} = await axios.get(`/api/spotify/user/playlists?access_token=${accessToken}&refresh_token=${refreshToken}`)
-
             if(data.status === 200) {
                 return data.body.map(item => new Playlist(item))
             } else {

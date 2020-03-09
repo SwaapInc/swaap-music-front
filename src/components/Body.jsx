@@ -9,7 +9,7 @@ import {getPlaylistsInfos, resetPlaylist} from "../modules/playlistManager";
 import {useCookies, withCookies} from "react-cookie";
 
 const Body = () => {
-    const {user, playlistsDeezer, playlistsSpotify, playlistsSaved, showUserDetails, accessToken, tokens} = useSelector(
+    const {user, playlistsDeezer, playlistsSpotify, playlistsSaved, showUserDetails, tokens} = useSelector(
         state => state.auth);
 
     const {token} = useSelector(state => state.localize);
@@ -17,55 +17,56 @@ const Body = () => {
     const scope = 'user-read-private user-read-email'
     const dispatch = useDispatch()
     const ssoUrlSpotify = `https://accounts.spotify.com/authorize?`
-        + `response_type=code&client_id=3a16f4201e6f4549b7b16283c35fe93c&scope=${scope}&`
-        + `redirect_uri=https://swaap-music-front.herokuapp.com/public/callback&state=1`;
+                          + `response_type=code&client_id=3a16f4201e6f4549b7b16283c35fe93c&scope=${scope}&`
+                          + `redirect_uri=https://swaap-music-front.herokuapp.com/public/callback&state=1`;
 
     const ssoUrlDeezer = `https://connect.deezer.com/oauth/auth.php?`
-        + `app_id=399164&redirect_uri=https://swaap-music-front.herokuapp.com/public/callback`
-        + `&perms=manage_library,basic_access&state=2`;
+                         + `app_id=399164&redirect_uri=https://swaap-music-front.herokuapp.com/public/callback`
+                         + `&perms=manage_library,basic_access&state=2`;
 
     function checkObject(user) {
         return user !== null && user !== undefined && user !== 'null' && user !== 'undefined'
     }
 
     const [cookies, setCookie] = useCookies([
-        'swaap_spotify_access_token',
-        'swaap_spotify_refresh_token',
-        'swaap_deezer_access_token',
-    ]);
+                                                'swaap_spotify_access_token',
+                                                'swaap_spotify_refresh_token',
+                                                'swaap_deezer_access_token',
+                                            ]);
 
     useEffect(() => {
-        if(checkObject(tokens.deezer.accessToken)) {
-            //if state.tokens.deezer.accessToken defined, set cookies
-            setCookie('swaap_deezer_access_token', tokens.deezer.accessToken, { path: '/private' })
-        }
-        if(checkObject(tokens.spotify.accessToken)) {
-            //if state.tokens.spotify.accessToken defined, set cookies
-            setCookie('swaap_spotify_access_token', tokens.spotify.accessToken, { path: '/private' })
-            setCookie('swaap_spotify_refresh_token', tokens.spotify.refreshToken, { path: '/private' })
-        }
-        if (checkObject(cookies.swaap_spotify_access_token)) {
-            dispatch(setToken({
-                api: 'spotify',
-                token: 'accessToken',
-                value: cookies.swaap_spotify_access_token
-            }))
-            dispatch(setToken({
-                api: 'spotify',
-                token: 'refreshToken',
-                value: cookies.swaap_spotify_refresh_token
-            }))
-        }
-        if (checkObject(cookies.swaap_deezer_access_token)) {
-            dispatch(setToken({
-                api: 'deezer',
-                token: 'accessToken',
-                value: cookies.swaap_deezer_access_token
-            }))
-        }
+                  if (checkObject(tokens.deezer.accessToken)) {
+                      //if state.tokens.deezer.accessToken defined, set cookies
+                      setCookie('swaap_deezer_access_token', tokens.deezer.accessToken, {path: '/private'})
+                  }
+                  if (checkObject(tokens.spotify.accessToken)) {
+                      //if state.tokens.spotify.accessToken defined, set cookies
+                      setCookie('swaap_spotify_access_token', tokens.spotify.accessToken, {path: '/private'})
+                      setCookie('swaap_spotify_refresh_token', tokens.spotify.refreshToken,
+                                {path: '/private'})
+                  }
+                  if (checkObject(cookies.swaap_spotify_access_token)) {
+                      dispatch(setToken({
+                                            api: 'spotify',
+                                            token: 'accessToken',
+                                            value: cookies.swaap_spotify_access_token
+                                        }))
+                      dispatch(setToken({
+                                            api: 'spotify',
+                                            token: 'refreshToken',
+                                            value: cookies.swaap_spotify_refresh_token
+                                        }))
+                  }
+                  if (checkObject(cookies.swaap_deezer_access_token)) {
+                      dispatch(setToken({
+                                            api: 'deezer',
+                                            token: 'accessToken',
+                                            value: cookies.swaap_deezer_access_token
+                                        }))
+                  }
 
-        dispatch(getPlaylistsInfos({...tokens, ownerId: user.id} ))
-        }, []
+                  dispatch(getPlaylistsInfos({...tokens, ownerId: user.id}))
+              }, []
     )
     const state = 'aaa'
     const ssoUrl = `https://accounts.spotify.com/authorize?`
@@ -167,40 +168,45 @@ const Body = () => {
                                 </div>
                             </div>
                             <div className="kt-portlet__body">
-                                    <div className="kt-section__content">
-                                        <div className="kt-widget-2">
-                                            <div
-                                                className="kt-widget-2__content kt-portlet__space-x">
-                                                    {
-                                                        tokens.spotify.accessToken ? (
-                                                            <div className="row justify-content-center">
-                                                                {
-                                                                    playlistsSpotify.length ? playlistsSpotify
-                                                                        .map((playlist) => {
-                                                                                return (
-                                                                                    <Playlist playlist={playlist} key={playlist.id} api={1}/>
-                                                                                )
-                                                                            }
-                                                                        ) : (
-                                                                        <div className="nav nav-pills nav-tabs-btn nav-pills-btn-brand">
-                                                                            <p>{token.missing_playlist.spotify}</p>
-                                                                        </div>
-                                                                    )
-                                                                }
-                                                            </div>
-                                                        ) : (
-                                                            <div className="row justify-content-center">
-                                                                <a href={ssoUrlSpotify}
-                                                                           className="btn btn-spotify btn-pill" >
-                                                                    <i className="fab fa-spotify"/>
-                                                                    {token.connect_to_spotify}
-                                                                </a>
-                                                            </div>
-                                                        )
-                                                    }
-                                            </div>
+                                <div className="kt-section__content">
+                                    <div className="kt-widget-2">
+                                        <div
+                                            className="kt-widget-2__content kt-portlet__space-x">
+                                            {
+                                                tokens.spotify.accessToken ? (
+                                                    <div className="row justify-content-center">
+                                                        {
+                                                            playlistsSpotify.length
+                                                            ? playlistsSpotify
+                                                                .map((playlist) => {
+                                                                         return (
+                                                                             <Playlist
+                                                                                 playlist={playlist}
+                                                                                 key={playlist.id}
+                                                                                 api={1}/>
+                                                                         )
+                                                                     }
+                                                                ) : (
+                                                                <div
+                                                                    className="nav nav-pills nav-tabs-btn nav-pills-btn-brand">
+                                                                    <p>{token.missing_playlist.spotify}</p>
+                                                                </div>
+                                                            )
+                                                        }
+                                                    </div>
+                                                ) : (
+                                                    <div className="row justify-content-center">
+                                                        <a href={ssoUrlSpotify}
+                                                           className="btn btn-spotify btn-pill">
+                                                            <i className="fab fa-spotify"/>
+                                                            {token.connect_to_spotify}
+                                                        </a>
+                                                    </div>
+                                                )
+                                            }
                                         </div>
                                     </div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -217,33 +223,39 @@ const Body = () => {
                                         <div className="kt-widget-2">
                                             <div
                                                 className="kt-widget-2__content kt-portlet__space-x">
-                                                    {
-                                                        tokens.deezer.accessToken ? (
-                                                            <div className="row justify-content-center">
-                                                                {
-                                                                    playlistsDeezer.length ? playlistsDeezer
-                                                                        .map((playlist, i) => {
-                                                                                return (
-                                                                                    <Playlist playlist={playlist} key={playlist.id} api={2}/>
-                                                                                )
-                                                                            }
-                                                                        ) : (
-                                                                        <div className="nav nav-pills nav-tabs-btn nav-pills-btn-brand">
-                                                                            <p>{token.missing_playlist.deezer}</p>
-                                                                        </div>
-                                                                    )
-                                                                }
+                                                {
+                                                    tokens.deezer.accessToken ? (
+                                                        <div className="row justify-content-center">
+                                                            {
+                                                                playlistsDeezer.length
+                                                                ? playlistsDeezer
+                                                                    .map((playlist, i) => {
+                                                                             return (
+                                                                                 <Playlist
+                                                                                     playlist={playlist}
+                                                                                     key={playlist.id}
+                                                                                     api={2}/>
+                                                                             )
+                                                                         }
+                                                                    ) : (
+                                                                    <div
+                                                                        className="nav nav-pills nav-tabs-btn nav-pills-btn-brand">
+                                                                        <p>{token.missing_playlist.deezer}</p>
+                                                                    </div>
+                                                                )
+                                                            }
 
-                                                            </div>
-                                                        ) : (
-                                                            <div className="row justify-content-center">
-                                                                <a href={ssoUrlDeezer} className="btn btn-deezer btn-pill">
-                                                                    <i className="socicon-deezer"/>
-                                                                    {token.connect_to_deezer}
-                                                                </a>
-                                                            </div>
-                                                        )
-                                                    }
+                                                        </div>
+                                                    ) : (
+                                                        <div className="row justify-content-center">
+                                                            <a href={ssoUrlDeezer}
+                                                               className="btn btn-deezer btn-pill">
+                                                                <i className="socicon-deezer"/>
+                                                                {token.connect_to_deezer}
+                                                            </a>
+                                                        </div>
+                                                    )
+                                                }
                                             </div>
                                         </div>
                                     </div>

@@ -266,13 +266,14 @@ function* importPlaylistFromId(input) {
 function* getPlaylistsInfos(tokens) {
     const {spotify, deezer, ownerId} = tokens.tokens
 
-    const playlistUser = yield new PlaylistService().getPlaylistsForUsers(ownerId)
+    const playlistsUser = yield new PlaylistService().getPlaylistsForUsers(ownerId)
     const playlistsSpotify = yield new SpotifyService().getPlaylistsForUsers(spotify)
     const playlistsDeezer = yield new DeezerService().getPlaylistsForUsers(deezer)
 
     yield put(playlistApi({
                               playlistsSpotify,
                               playlistsDeezer,
+                              playlistsUser
                           }))
 }
 

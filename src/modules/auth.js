@@ -44,6 +44,7 @@ export const playlistApi = (playlists) => ({
     type: PLAYLISTS_API,
     playlistsDeezer: playlists.playlistsDeezer,
     playlistsSpotify: playlists.playlistsSpotify,
+    playlistsUser: playlists.playlistsUser
 })
 
 export const logoutUser = () => ({
@@ -171,8 +172,9 @@ export default function reducer(
         case PLAYLISTS_API :
             return {
                 ...state,
-                playlistsDeezer: action.playlistsDeezer ? action.playlistsDeezer : [],
-                playlistsSpotify: action.playlistsSpotify ? action.playlistsSpotify : [],
+                playlistsDeezer: action.playlistsDeezer ? action.playlistsDeezer : state.playlistsDeezer,
+                playlistsSpotify: action.playlistsSpotify ? action.playlistsSpotify : state.playlistsSpotify,
+                playlistsSaved: action.playlistsUser ? action.playlistsUser : state.playlistsSaved
             }
         default:
             return state

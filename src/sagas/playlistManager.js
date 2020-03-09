@@ -23,10 +23,10 @@ async function searchPlaylists(tokens) {
     const playlistsSpotify = await new SpotifyService().getPlaylistsForUsers(spotify)
     const playlistsDeezer = await new DeezerService().getPlaylistsForUsers(deezer)
 
-    return put(playlistApi({
+    return playlistApi({
         playlistsSpotify,
         playlistsDeezer
-    }))
+    })
 
 }
 
@@ -269,7 +269,8 @@ function* importPlaylistFromId(input) {
 }
 
 function* getPlaylistsInfos(tokens) {
-    yield searchPlaylists(tokens)
+    const playlists = yield searchPlaylists(tokens)
+    yield put(playlistApi(playlists))
 }
 
 function* uploadPlaylist(playlistInfos) {

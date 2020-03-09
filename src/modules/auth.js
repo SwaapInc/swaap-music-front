@@ -95,16 +95,12 @@ export default function reducer(
                 ...state,
                 user: action.user,
                 avatar: action.user.avatar,
-                playlistsDeezer: action.playlistsDeezer ? action.playlistsDeezer : state.playlistsDeezer,
-                playlistsSpotify: action.playlistsSpotify ? action.playlistsSpotify : state.playlistsSpotify,
-                playlistsSaved: action.playlistsSaved ? action.playlistsSaved : state.playlistsSaved,
             }
-        case UPDATE_USER_PLAYLISTS: {
+        case UPDATE_USER_PLAYLISTS:
             return {
                 ...state,
                 playlistsSaved: action.playlistsSaved
             }
-        }
         case LOGOUT:
             return {
                 ...state,
@@ -165,11 +161,12 @@ export default function reducer(
                     tokens: newTokens
                 }
             }
+            return state;
         case PLAYLISTS_API :
             return {
                 ...state,
-                playlistsDeezer: action.playlistsDeezer ? action.playlistsDeezer : state.playlistsDeezer,
-                playlistsSpotify: action.playlistsSpotify ? action.playlistsSpotify : state.playlistsSpotify,
+                playlistsDeezer: action.playlistsDeezer.length > 0 ? action.playlistsDeezer : state.playlistsDeezer,
+                playlistsSpotify: action.playlistsSpotify.length > 0 ? action.playlistsSpotify : state.playlistsSpotify,
             }
         default:
             return state

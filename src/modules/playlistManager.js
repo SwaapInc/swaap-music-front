@@ -11,6 +11,7 @@ export const SAVE_NEW_PLAYLIST = 'app/playlistManager/SAVE_NEW_PLAYLIST'
 export const PLAYLISTS_INFOS = 'app/playlistManager/PLAYLISTS_INFOS'
 export const UPLOAD_PLAYLIST = 'app/playlistManager/UPLOAD_PLAYLIST'
 
+
 function removeItemFromPlaylist(playlist, action) {
     const {api, id} = action
     switch (api) {
@@ -163,6 +164,8 @@ export default function reducer(
                 playlistName: action.playlist.playlistName,
                 playlistImage: action.playlist.image,
                 playlistApi: action.playlist.api,
+                spotify_Id: action.playlist.spotify_Id,
+                deezer_Id: action.playlist.deezer_Id,
             };
         case UPDATE_PLAYLIST_NAME:
             return {

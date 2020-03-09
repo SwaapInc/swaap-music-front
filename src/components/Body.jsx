@@ -9,11 +9,13 @@ import {getPlaylistsInfos, resetPlaylist} from "../modules/playlistManager";
 import {useCookies, withCookies} from "react-cookie";
 
 const Body = () => {
-    const {user, playlistsDeezer, playlistsSpotify, playlistsSaved, showUserDetails, tokens} = useSelector(state => state.auth);
+    const {user, playlistsDeezer, playlistsSpotify, playlistsSaved, showUserDetails, accessToken, tokens} = useSelector(
+        state => state.auth);
+
     const {token} = useSelector(state => state.localize);
     const {searchBar} = useSelector(state => state.search)
+    const scope = 'user-read-private user-read-email'
     const dispatch = useDispatch()
-    const scope = 'user-read-private playlist-read-private playlist-modify-public playlist-modify-private'
     const ssoUrlSpotify = `https://accounts.spotify.com/authorize?`
         + `response_type=code&client_id=3a16f4201e6f4549b7b16283c35fe93c&scope=${scope}&`
         + `redirect_uri=https://swaap-music-front.herokuapp.com/public/callback&state=1`;
@@ -62,12 +64,17 @@ const Body = () => {
             }))
         }
 
-        dispatch(getPlaylistsInfos(tokens))
+        dispatch(getPlaylistsInfos({...tokens, ownerId: user.id} ))
         }, []
     )
+    const state = 'aaa'
+    const ssoUrl = `https://accounts.spotify.com/authorize?`
+                   + `response_type=code&client_id=3a16f4201e6f4549b7b16283c35fe93c&scope=${scope}&`
+                   + `redirect_uri=https://swaap-music-front.herokuapp.com/public/callback&state=${state}`;
 
     return (
-        <div className="kt-container kt-grid__item kt-grid__item--fluid kt-grid--hor" id="kt-content">
+        <div className="kt-container kt-grid__item kt-grid__item--fluid kt-grid--hor"
+             id="kt-content">
             <PlaylistManager/>
             <div className="kt-container  kt-grid__item kt-grid__item--fluid">
                 <div className="row">
@@ -84,34 +91,41 @@ const Body = () => {
                                         <div className="kt-widget-2__content kt-portlet__space-x">
                                             <div className="row">
                                                 {/*********** Nos listes de lecture **************/}
-                                                {playlistsSaved.length ?
-                                                    playlistsSaved
-                                                        .map((playlist) => {
-                                                                return (
-                                                                    <SavedPlaylist playlist={playlist} key={playlist.id}/>
-                                                                )
-                                                            }
-                                                        ) : (
-                                                        <p>{token.missing_playlist.saved}</p>
-                                                    )
+                                                {playlistsSaved.length
+                                                 ? playlistsSaved
+                                                     .map((playlist) => {
+                                                              return (
+                                                                  <SavedPlaylist playlist={playlist}
+                                                                                 key={playlist.id}/>
+                                                              )
+                                                          }
+                                                     )
+                                                 : (
+                                                     <p>{token.missing_playlist.saved}</p>
+                                                 )
                                                 }
                                                 {
                                                     user ? (
-                                                        <div className="col-xl-2 justify-content-lg-center" align="center"
-                                                             style={{
-                                                                 paddingTop: '2rem'
-                                                             }}
+                                                        <div
+                                                            className="col-xl-2 justify-content-lg-center"
+                                                            align="center"
+                                                            style={{
+                                                                paddingTop: '2rem'
+                                                            }}
                                                         >
-                                                            <div className="kt-widget-2__item" style={{
-                                                                width: '120px',
-                                                                height: '120px',
-                                                            }}>
-                                                                <div className="kt-media kt-media--xl"
-                                                                     style={{
+                                                            <div className="kt-widget-2__item"
+                                                                 style={{
+                                                                     width: '120px',
+                                                                     height: '120px',
+                                                                 }}>
+                                                                <div
+                                                                    className="kt-media kt-media--xl"
+                                                                    style={{
                                                                         paddingTop: '1rem',
                                                                     }}
                                                                 >
-                                                                    <button type="button" className="btn btn-lg btn-outline-brand btn-icon"
+                                                                    <button type="button"
+                                                                            className="btn btn-lg btn-outline-brand btn-icon"
                                                                             style={{
                                                                                 maxWidth: 200,
                                                                                 whiteSpace: 'nowrap',
@@ -119,9 +133,12 @@ const Body = () => {
                                                                                 overflow: 'hidden'
                                                                             }}
                                                                             onClick={() => {
-                                                                                dispatch(resetSearch())
-                                                                                dispatch(resetPlaylist())
-                                                                                dispatch(toggleSearch())
+                                                                                dispatch(
+                                                                                    resetSearch())
+                                                                                dispatch(
+                                                                                    resetPlaylist())
+                                                                                dispatch(
+                                                                                    toggleSearch())
                                                                             }}
                                                                     >
                                                                         <i className="flaticon2-add-1"/>
@@ -152,7 +169,8 @@ const Body = () => {
                             <div className="kt-portlet__body">
                                     <div className="kt-section__content">
                                         <div className="kt-widget-2">
-                                            <div className="kt-widget-2__content kt-portlet__space-x">
+                                            <div
+                                                className="kt-widget-2__content kt-portlet__space-x">
                                                     {
                                                         tokens.spotify.accessToken ? (
                                                             <div className="row justify-content-center">
@@ -172,7 +190,8 @@ const Body = () => {
                                                             </div>
                                                         ) : (
                                                             <div className="row justify-content-center">
-                                                                <a href={ssoUrlSpotify} className="btn btn-spotify btn-pill" >
+                                                                <a href={ssoUrlSpotify}
+                                                                           className="btn btn-spotify btn-pill" >
                                                                     <i className="fab fa-spotify"/>
                                                                     {token.connect_to_spotify}
                                                                 </a>
@@ -196,7 +215,8 @@ const Body = () => {
                                 <div className="kt-section__content">
                                     <div className="kt-section__content">
                                         <div className="kt-widget-2">
-                                            <div className="kt-widget-2__content kt-portlet__space-x">
+                                            <div
+                                                className="kt-widget-2__content kt-portlet__space-x">
                                                     {
                                                         tokens.deezer.accessToken ? (
                                                             <div className="row justify-content-center">
@@ -241,16 +261,16 @@ const Body = () => {
                      onClick={() => dispatch(detailUser())}
                 />
             ) : (
-                <div/>
-            )}
+                 <div/>
+             )}
             {searchBar ? (
                 <div className={[
                     searchBar ? 'show' : '',
                     "modal-backdrop fade"
                 ].join(' ')}/>
             ) : (
-                <div/>
-            )}
+                 <div/>
+             )}
 
         </div>
     )

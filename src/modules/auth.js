@@ -1,3 +1,5 @@
+import {UPDATE_PLAYLIST_NAME} from "./playlistManager";
+
 export const LOGIN = 'app/auth/LOGIN'
 export const LOGIN_REQUEST = 'app/auth/LOGIN_REQUEST'
 export const LOGOUT = 'app/auth/LOGOUT'
@@ -59,7 +61,8 @@ export const requestLoginUser = (input) => ({
 
 export const updateUserPlaylists = (input) => ({
     type: UPDATE_USER_PLAYLISTS,
-    playlistsSaved: input.playlistsSaved
+    playlistsSaved: input.playlistsSaved,
+    ownerId: input.ownerId
 })
 
 export const detailUser = () => ({

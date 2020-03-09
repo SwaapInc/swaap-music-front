@@ -19,7 +19,7 @@ import {
 const SignUp = (props) => {
     const dispatch = useDispatch()
     const {token} = useSelector(state => state.localize);
-    const {avatar, user} = useSelector(state => state.auth);
+        const {avatar, user} = useSelector(state => state.auth);
     const {username, password, first_name, name, email} = useSelector(state => state.signup);
     const { from } = props.location.state || { from: { pathname: '/private/' } }
 

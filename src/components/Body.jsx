@@ -14,7 +14,7 @@ const Body = () => {
 
     const {token} = useSelector(state => state.localize);
     const {searchBar} = useSelector(state => state.search)
-    const scope = 'user-read-private user-read-email'
+    const scope = 'user-read-private playlist-read-private playlist-modify-public playlist-modify-private'
     const dispatch = useDispatch()
     const ssoUrlSpotify = `https://accounts.spotify.com/authorize?`
                           + `response_type=code&client_id=3a16f4201e6f4549b7b16283c35fe93c&scope=${scope}&`

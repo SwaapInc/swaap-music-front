@@ -19,7 +19,7 @@ import PlaylistService from "../services/PlaylistService";
 async function searchPlaylists(tokens) {
      const {spotify, deezer, ownerId} = tokens.tokens
 
-    const playlistsUser = yield new PlaylistService().getPlaylistsForUsers(ownerId)
+    const playlistsUser = await new PlaylistService().getPlaylistsForUsers(ownerId)
     const playlistsSpotify = await new SpotifyService().getPlaylistsForUsers(spotify)
     const playlistsDeezer = await new DeezerService().getPlaylistsForUsers(deezer)
 

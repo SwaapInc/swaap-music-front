@@ -1,3 +1,5 @@
+import {UPDATE_PLAYLIST_NAME} from "./playlistManager";
+
 export const LOGIN = 'app/auth/LOGIN'
 export const LOGIN_REQUEST = 'app/auth/LOGIN_REQUEST'
 export const LOGOUT = 'app/auth/LOGOUT'
@@ -42,6 +44,7 @@ export const playlistApi = (playlists) => ({
     type: PLAYLISTS_API,
     playlistsDeezer: playlists.playlistsDeezer,
     playlistsSpotify: playlists.playlistsSpotify,
+    playlistsUser: playlists.playlistsUser
 })
 
 export const logoutUser = () => ({
@@ -59,7 +62,8 @@ export const requestLoginUser = (input) => ({
 
 export const updateUserPlaylists = (input) => ({
     type: UPDATE_USER_PLAYLISTS,
-    playlistsSaved: input.playlistsSaved
+    playlistsSaved: input.playlistsSaved,
+    ownerId: input.ownerId
 })
 
 export const detailUser = () => ({
@@ -165,8 +169,9 @@ export default function reducer(
         case PLAYLISTS_API :
             return {
                 ...state,
-                playlistsDeezer: action.playlistsDeezer.length > 0 ? action.playlistsDeezer : state.playlistsDeezer,
-                playlistsSpotify: action.playlistsSpotify.length > 0 ? action.playlistsSpotify : state.playlistsSpotify,
+                playlistsDeezer: action.playlistsDeezer ? action.playlistsDeezer : state.playlistsDeezer,
+                playlistsSpotify: action.playlistsSpotify ? action.playlistsSpotify : state.playlistsSpotify,
+                playlistsSaved: action.playlistsUser ? action.playlistsUser : state.playlistsSaved
             }
         default:
             return state

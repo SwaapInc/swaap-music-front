@@ -4,28 +4,29 @@ import DeezerService from "../services/DeezerService";
 import SpotifyService from "../services/SpotifyService";
 import {
     ADD_TO_PLAYLIST,
-    GET_SAVED_PLAYLIST,
-    SAVE_NEW_PLAYLIST,
-    PLAYLISTS_INFOS,
-    IMPORT_PLAYLIST,
-    UPLOAD_PLAYLIST,
     addResultToPlaylist,
     convertPlaylistProgress,
-    saveNewPlaylist,
+    GET_SAVED_PLAYLIST,
+    IMPORT_PLAYLIST,
+    PLAYLISTS_INFOS,
+    UPLOAD_PLAYLIST,
 } from "../modules/playlistManager";
-import {playlistApi} from '../modules/auth'
+import {playlistApi, UPDATE_USER_PLAYLISTS} from '../modules/auth'
 import {toggleSearch} from '../modules/search'
+import PlaylistService from "../services/PlaylistService";
 
 
 async function searchPlaylists(tokens) {
-    const {spotify, deezer} = tokens.tokens
+     const {spotify, deezer, ownerId} = tokens.tokens
 
+    const playlistsUser = yield new PlaylistService().getPlaylistsForUsers(ownerId)
     const playlistsSpotify = await new SpotifyService().getPlaylistsForUsers(spotify)
     const playlistsDeezer = await new DeezerService().getPlaylistsForUsers(deezer)
 
     return playlistApi({
         playlistsSpotify,
-        playlistsDeezer
+        playlistsDeezer,
+        playlistsUser
     })
 
 }
@@ -87,18 +88,18 @@ function* importSavedPlaylistFromId(input) {
                                               id,
                                               playlistName,
                                               image,
-                                                api: 0,
+                                              api: 0,
                                           }))
     }
 
     yield put(convertPlaylistProgress({
-        playlist,
-        progress: 100,
-        id,
-        playlistName,
-        image,
-        api: 0
-    }))
+                                          playlist,
+                                          progress: 100,
+                                          id,
+                                          playlistName,
+                                          image,
+                                          api: 0
+                                      }))
 
 }
 
@@ -146,7 +147,8 @@ function* addTrackToPlaylist(input) {
             if (tuple.length > 0) {
                 spotify = yield new SpotifyService().getTrackFromId(tuple[0].dataDeezer)
             } else {
-                spotify = yield new SpotifyService().searchTrackFromCompleteRequestInBean(requestInBean)
+                spotify =
+                    yield new SpotifyService().searchTrackFromCompleteRequestInBean(requestInBean)
             }
 
             if (spotify === false) {
@@ -217,14 +219,19 @@ function* importPlaylistFromId(input) {
                             dataSpotify: track,
                         }
                     ]
-                    yield put(convertPlaylistProgress({
+                    const newPlaylist = {
                         playlist,
                         progress: (playlist.length / total) * 100,
                         id,
+                        spotify_Id : id,
+                        deezer_Id: '',
                         playlistName,
                         image,
                         api,
-                    }))
+                    }
+
+
+                    yield put(convertPlaylistProgress(newPlaylist))
                 }
             }
             break;
@@ -244,13 +251,15 @@ function* importPlaylistFromId(input) {
                         }
                     ]
                     yield put(convertPlaylistProgress({
-                        playlist,
-                        progress: (playlist.length / total) * 100,
-                        id,
-                        playlistName,
-                        image,
-                        api
-                    }))
+                                                          playlist,
+                                                          progress: (playlist.length / total) * 100,
+                                                          id,
+                                                          spotify_Id : '',
+                                                          deezer_Id: id,
+                                                          playlistName,
+                                                          image,
+                                                          api
+                                                      }))
                 }
             }
             break;
@@ -259,13 +268,15 @@ function* importPlaylistFromId(input) {
             break;
     }
     yield put(convertPlaylistProgress({
-        playlist,
-        progress: 100,
-        id,
-        playlistName,
-        image,
-        api
-    }))
+                                          playlist,
+                                          progress: 100,
+                                          id,
+                                          spotify_Id : api === 1 ? id : null,
+                                          deezer_Id: api === 2 ? id : null,
+                                          playlistName,
+                                          image,
+                                          api
+                                      }))
 }
 
 function* getPlaylistsInfos(tokens) {
@@ -359,11 +370,21 @@ function* uploadPlaylist(playlistInfos) {
     }
 }
 
+function* updateUserPlaylists(input) {
+    const newPlaylist = input.playlistsSaved[input.playlistsSaved.length - 1]
+    console.log(input)
+    console.log(newPlaylist)
+    // POST for the DB
+    const data = yield new PlaylistService().updatePlaylist(newPlaylist, input.ownerId)
+    console.log(data)
+
+}
+
 export default function* manageAddPlaylist() {
     yield takeEvery(ADD_TO_PLAYLIST, addTrackToPlaylist)
     yield takeEvery(IMPORT_PLAYLIST, importPlaylistFromId)
     yield takeEvery(GET_SAVED_PLAYLIST, importSavedPlaylistFromId)
-    yield takeEvery(SAVE_NEW_PLAYLIST, saveNewPlaylist)
+    yield takeEvery(UPDATE_USER_PLAYLISTS, updateUserPlaylists)
     yield takeEvery(PLAYLISTS_INFOS, getPlaylistsInfos)
     yield takeEvery(UPLOAD_PLAYLIST, uploadPlaylist)
 }

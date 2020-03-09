@@ -7,9 +7,10 @@ import {updateUserPlaylists} from "../modules/auth"
 
 const PlaylistManager = () => {
     const {tracks, searchBar, searchValue, api} = useSelector(state => state.search)
-    const {playlists, progressBar, playlistName, playlistImage, playlistId, trackCorrelation, playlistApi} = useSelector(state => state.playlists)
+    const {playlists, progressBar, playlistName, playlistImage, playlistId, trackCorrelation, playlistApi, spotify_Id, deezer_Id} = useSelector(
+        state => state.playlists)
     // store du reducer "user
-    const {playlistsSaved, tokens} = useSelector(state => state.auth);
+    const {playlistsSaved, tokens, user} = useSelector(state => state.auth);
     const {token} = useSelector(state => state.localize)
     const dispatch = useDispatch()
 
@@ -35,19 +36,13 @@ const PlaylistManager = () => {
         }
     }
 
-    function dispatchUpdateUserPlaylists() {
-        dispatch(updateUserPlaylists({
-                                         playlistsSaved:
-
-                                             [...playlistsSaved,
-                                                 {
-                                                     tracks: playlists,
-                                                     name: playlistName,
-                                                     image: playlistImage,
-                                                     id: playlistId,
-                                                 },]
-                                     }
-        ))
+    const newPlaylist = {
+        tracks: playlists,
+        name: playlistName,
+        image: playlistImage,
+        id: playlistId,
+        spotify_Id,
+        deezer_Id,
     }
 
     return (
@@ -201,8 +196,13 @@ const PlaylistManager = () => {
                                             toggleSearch())}>{token.button_close}</button>
                                 &nbsp;
                                 &nbsp;
-                                <button type="button" className="btn btn-"
-                                        onClick={() => dispatchUpdateUserPlaylists()}>
+                                <button type="button" className="btn btn-brand"
+                                        onClick={() => dispatch(updateUserPlaylists({
+                                                                                        playlistsSaved: [...playlistsSaved,
+                                                                                                         newPlaylist],
+                                                                                        ownerId: user.id
+                                                                                    }
+                                        ))}>
                                     {token.button_save_playlist}
                                 </button>
                                 &nbsp;
@@ -211,14 +211,15 @@ const PlaylistManager = () => {
                                     'btn',
                                     api === 1 ? !tokens.spotify.accessToken ? 'btn-spotify btn-disabled' : 'btn-spotify' : '',
                                     api === 2 ? !tokens.deezer.accessToken ? 'btn-deezer btn-disabled' : 'btn-deezer' : ''
+
                                 ].join(' ')} onClick={() => dispatch(uploadPlaylist({
-                                    playlists,
-                                    api,
-                                    playlistId,
-                                    playlistName,
-                                    tokens,
-                                    playlistApi
-                                }))}>
+                                                                                        playlists,
+                                                                                        api,
+                                                                                        playlistId,
+                                                                                        playlistName,
+                                                                                        tokens,
+                                                                                        playlistApi
+                                                                                    }))}>
                                     <i className="fa fa-upload"/>
                                     {
                                         api === 1 ? (
@@ -226,8 +227,8 @@ const PlaylistManager = () => {
                                         ) : api === 2 ? (
                                             <span>{token.deezer.button_upload_playlist}</span>
                                         ) : (
-                                            <span/>
-                                        )
+                                                <span/>
+                                            )
                                     }
                                 </button>
                             </div>

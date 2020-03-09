@@ -47,7 +47,6 @@ const Callback = (props) => {
                 break;
             case '2' :
                 const dataDeezer = await new DeezerService().requestAccessToken({code, state})
-                console.log(dataDeezer)
                 if(dataDeezer.status === 400) {
                     console.error(dataDeezer.body)
                     return {
